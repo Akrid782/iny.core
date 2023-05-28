@@ -11,7 +11,16 @@ on:
       - ".github/workflows/phpcs.yml"
 
 jobs:
-  run_tests:
+  phplint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: PHP Lint 8.1
+        uses: dbfx/github-phplint/8.1@master
+  phpcs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
