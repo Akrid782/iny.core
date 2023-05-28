@@ -29,4 +29,3 @@ jobs:
             scan_all: true
             phpcs_path: php phpcs.phar
             standard: PSR12
-            runtime_set: testVersion ${PHPVERSION}
