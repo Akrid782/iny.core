@@ -24,9 +24,8 @@ jobs:
             php phpcs.phar --version
 
         - uses: Novusvetus/action-php_codesniffer@1.2.14
-          with:
-            files: "**.php"
-            scan_all: true
-            phpcs_path: php phpcs.phar
-            standard: PHP12
-            runtime_set: testVersion ${PHPVERSION}
+          run: |
+            php phpcs.phar -s -p --colors
+            --standard=PSR12
+            --extensions=php
+            --runtime-set testVersion ${PHPVERSION} .
