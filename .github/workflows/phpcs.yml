@@ -30,4 +30,4 @@ jobs:
             --extensions=php \
             --ignore=install/index.php \
             --exclude=Generic.ControlStructures.InlineControlStructure \
-            --runtime-set testVersion ${PHPVERSION} ./
+            --runtime-set testVersion 8.1 ./
