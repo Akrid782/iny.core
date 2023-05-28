@@ -1,33 +1,32 @@
-name: "CI"
+name: "PHP_auto_test"
 
 on:
   push:
+    tags:
+      - '!refs/tags/*'
+    branches:
+      - '*'
     paths:
       - "**.php"
-      - "phpcs.xml"
-      - ".github/workflows/phpcs.yml"
-  pull_request:
-    paths:
-      - "**.php"
-      - "phpcs.xml"
       - ".github/workflows/phpcs.yml"
 
 jobs:
-  phpcs:
+  run_tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # important!
+        - uses: actions/checkout@v3
+          with:
+            fetch-depth: 0 # important!
 
-      - name: Install PHP_CodeSniffer
-        run: |
-          curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
-          php phpcs.phar --version
+        - name: Install PHP_CodeSniffer
+          run: |
+            curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+            php phpcs.phar --version
 
-      - uses: Novusvetus/action-php_codesniffer@1.2.14
-        with:
-          files: "**.php"
-          scan_all: true
-          phpcs_path: php phpcs.phar
-          standard: phpcs.xml
+        - uses: Novusvetus/action-php_codesniffer@1.2.14
+          with:
+            files: "**.php"
+            scan_all: true
+            phpcs_path: php phpcs.phar
+            standard: PHP12
+            runtime_set: testVersion ${PHPVERSION}
