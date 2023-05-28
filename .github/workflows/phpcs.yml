@@ -26,9 +26,6 @@ jobs:
         - name: Run PHP_CodeSniffer
           run: |
             php phpcs.phar -s -p --colors \
-            --report-junit=logs/junit.xml \
-            --report-checkstyle=logs/checkstyle.xml \
-            --report-full=checkstyle.txt \
             --standard=PSR12 \
             --extensions=php \
             --ignore=install/index.php \
