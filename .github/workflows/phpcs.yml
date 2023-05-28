@@ -31,6 +31,6 @@ jobs:
             --report-full=checkstyle.txt
             --standard=PSR12
             --extensions=php
-            --ignore=core,res,install/index.php,vendor
+            --ignore=install/index.php
             --exclude=Generic.ControlStructures.InlineControlStructure      
             --runtime-set testVersion ${PHPVERSION} ./
