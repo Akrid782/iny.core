@@ -34,6 +34,4 @@ jobs:
 
       - name: Run PHP_CodeSniffer
         run: |
-          php phpcs.phar --standard=./phpcs.xml \
-          --extensions=php \
-          --runtime-set testVersion 8.1 ./
+          php phpcs.phar --standard=./phpcs.xml --runtime-set testVersion 8.1 ./

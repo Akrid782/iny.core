@@ -4,6 +4,8 @@
     <arg name="colors"/>
     <arg value="p"/>
     <arg value="s"/>
+    <arg name="report" value="code"/>
+    <arg name="extensions" value="php"/>
 
     <rule ref="PSR12"/>
 
