@@ -2,10 +2,16 @@
 
 namespace INY\Core\PHPUnit;
 
+use PHPUnit\Framework;
 use Bitrix\Main\Application;
 use Bitrix\Main\DB\SqlQueryException;
 
-class TestCase extends \PHPUnit\Framework\TestCase
+/**
+ * class TestCase
+ *
+ * @package INY\Core\PHPUnit
+ */
+class TestCase extends Framework\TestCase
 {
     protected static bool $useTransaction = true;
 
