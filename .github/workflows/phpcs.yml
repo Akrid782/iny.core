@@ -34,9 +34,6 @@ jobs:
 
       - name: Run PHP_CodeSniffer
         run: |
-          php phpcs.phar -s -p --colors \
-          --standard=PSR12 \
+          php phpcs.phar --standard=./phpcs.xml \
           --extensions=php \
-          --ignore=install/index.php \
-          --exclude=Generic.ControlStructures.InlineControlStructure \
           --runtime-set testVersion 8.1 ./
