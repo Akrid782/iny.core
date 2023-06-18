@@ -53,9 +53,16 @@ class iny_core extends CModule
     {
         global $APPLICATION, $step;
 
-        if (!$this->checkPermission()) {
-            return;
+        if (PHP_VERSION < 8.1) {
+            $APPLICATION->ThrowException(
+                Loc::getMessage('INY_CORE_MODULE_INSTALL_ERROR_MINIMUM_VERSION_PHP', [
+                    '#VERSION#' => PHP_VERSION,
+                ])
+            );
         }
+
+        $this->checkPermission();
+        $this->showError();
 
         switch ((int) $step) {
             case 0:
@@ -86,9 +93,8 @@ class iny_core extends CModule
     {
         global $APPLICATION, $step;
 
-        if (!$this->checkPermission()) {
-            return;
-        }
+        $this->checkPermission();
+        $this->showError();
 
         switch ((int) $step) {
             case 0:
@@ -169,21 +175,29 @@ class iny_core extends CModule
     }
 
     /**
-     * @return bool
+     * @return void
      */
-    protected function checkPermission(): bool
+    protected function checkPermission(): void
     {
         global $APPLICATION;
 
         if (!check_bitrix_sessid() || !CurrentUser::get()->isAdmin()) {
+            $APPLICATION->ThrowException(Loc::getMessage('INY_CORE_MODULE_INSTALL_ERROR_PERMISSION'));
+        }
+    }
+
+    /**
+     * @return void
+     */
+    protected function showError(): void
+    {
+        global $APPLICATION;
+
+        if ($APPLICATION->GetException()) {
             $APPLICATION->IncludeAdminFile(
-                Loc::getMessage('INY_CORE_MODULE_INSTALL_ERROR_PERMISSION'),
+                Loc::getMessage('INY_CORE_MODULE_INSTALL_ERROR'),
                 $this->MODULE_FOLDER . "/install/error.php"
             );
-
-            return false;
         }
-
-        return true;
     }
 }
