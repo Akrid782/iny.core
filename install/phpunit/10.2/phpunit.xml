@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="local/modules/iny.core/tests/bootstrap.php"
+         executionOrder="depends,defects"
+         beStrictAboutOutputDuringTests="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         colors="true"
+         failOnEmptyTestSuite="true"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.2/phpunit.xsd" cacheDirectory=".phpunit.cache"
+         beStrictAboutCoverageMetadata="true">
+    <coverage/>
+    <testsuites>
+        <testsuite name="INYCore">
+            <directory suffix="Test.php">
+                local/modules/
+            </directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory suffix=".php">
+                local
+            </directory>
+        </include>
+    </source>
+</phpunit>
