@@ -76,6 +76,6 @@ class StringType extends ABaseType
      */
     public function normalize(mixed $value): string
     {
-        return htmlspecialcharsbx($value);
+        return htmlspecialcharsbx($value ?: '');
     }
 }
