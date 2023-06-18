@@ -1,5 +1,6 @@
 <?php
 
+use Bitrix\Main\ModuleManager;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Engine\CurrentUser;
 
@@ -40,6 +41,8 @@ class iny_core extends CModule
         if (!CurrentUser::get()->isAdmin()) {
             return;
         }
+
+        ModuleManager::registerModule($this->MODULE_ID);
     }
 
     /**
@@ -47,6 +50,7 @@ class iny_core extends CModule
      */
     public function DoUninstall(): void
     {
+        ModuleManager::unRegisterModule($this->MODULE_ID);
     }
 
     /**
