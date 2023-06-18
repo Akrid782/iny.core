@@ -5,7 +5,7 @@ namespace INY\Core\Validations;
 use INY\Core\Validations\Fields\ABaseType;
 
 /**
- * class Serializer
+ * class Validator
  *
  * @package INY\Core\Validations
  */
