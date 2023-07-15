@@ -9,12 +9,295 @@
 
     <rule ref="PSR12"/>
 
+    <!--Документация методов -->
+    <rule ref="PEAR.Commenting.FunctionComment">
+
+        <properties>
+            <!--Должно пропускать ошибку наследованной документации -->
+            <property name="skipIfInheritdoc" value="true"/>
+
+            <!--Включена проверка только у public и protected методов -->
+            <property name="minimumVisibility" value="protected"/>
+        </properties>
+
+        <!-- Отключена проверка описания метода -->
+        <exclude name="PEAR.Commenting.FunctionComment.MissingParamComment"/>
+
+        <!-- Отключена проверка на не понятная что, но она мешает когда в phpdoc все хорошо -->
+        <exclude name="PEAR.Commenting.FunctionComment.SpacingAfterParamType"/>
+        <exclude name="PEAR.Commenting.FunctionComment.MissingParamTag"/>
+    </rule>
+
+    <!-- Проверка на логические операторы "and" и "or", например if (1 and 2) плохо, а if (1 && 2) хорошо  -->
+    <rule ref="Squiz.Operators.ValidLogicalOperators"/>
+
+    <!-- Проверка на присутствие мертвого кода  -->
+    <rule ref="Squiz.PHP.NonExecutableCode"/>
+
+    <!-- Проверка на применение $this в статических методах  -->
+    <rule ref="Squiz.Scope.StaticThisUsage"/>
+
+    <!-- Проверка на двойные кавычки, пример "example" нельзя, а "example {$param}" и 'example' можно  -->
+    <rule ref="Squiz.Strings.DoubleQuoteUsage.NotRequired"/>
+
+    <!--
+        Проверка на пробел после приведение типов
+
+        Пример:
+        $hoge = (int) '123';
+        $fuga = (int)'123'; // Expected 1 space(s) after cast statement; 0 found
+    -->
+    <rule ref="Generic.Formatting.SpaceAfterCast"/>
+
+    <!--
+        Проверяет интервал после оператора !
+
+        Пример:
+        $hoge = ! true; // Expected 1 space(s) after NOT operator; 0 found
+        $fuga = !true;
+    -->
+    <rule ref="Generic.Formatting.SpaceAfterNot">
+        <properties>
+            <property name="spacing" value="0"/>
+        </properties>
+    </rule>
+
+    <!-- Проверка, что нет пустой строки после открывающей фигурной скобки метода -->
+    <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
+
+    <!-- Проверка на присутствие пустых строк до и после метода -->
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+        <properties>
+            <property name="spacing" value="1"/>
+            <property name="spacingBeforeFirst" value="0"/>
+            <property name="spacingAfterLast" value="0"/>
+        </properties>
+    </rule>
+
+    <!-- Проверяет что все языковые конструкции содержат один пробел между ними и их содержимым  -->
+    <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing"/>
+
+    <!-- Проверяет наличие пробелов вокруг логических операторов -->
+    <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+
+    <!-- Проверка, что перед оператором объекта и после него нет пробелов -->
+    <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">
+        <properties>
+            <property name="ignoreNewlines" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- Проверяет что перед точкой с запятой нет пробелов -->
+    <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
+
+    <!--
+    Проверяет на наличие ненужных пробелов.
+
+    * Пробел в конце строки (EndLine)
+    * Дополнительный пробел в начале файла (StartFile)
+    * Дополнительный пробел в конце файла (EndFile)
+    * Несколько пустых строк в функциях (EmptyLines)
+    -->
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+
+    <!--
+        Проверяет, что элементы массива имеют отступ в 4 пробел
+
+        Пример:
+        $array = [
+            'ok',
+          'ng', // Array key not indented correctly; expected 4 spaces but found 2
+        ];
+    -->
+    <rule ref="Generic.Arrays.ArrayIndent"/>
+
+    <!--
+        Запрещает синтаксис длинного массива.
+
+        Пример:
+        $ok = [];
+        $ng = array(); // Short array syntax must be used to define arrays
+    -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+    <!--
+        Проверяет наличие пустых операторов PHP.
+
+        * Две точки с запятой без исполняемого кода между ними
+        * Пустая комбинация тегов открытия-закрытия PHP
+
+        Пример:
+        <?php
+        ; // Empty PHP statement detected: superfluous semi-colon.
+        ?>
+
+        <?php ?> // Empty PHP open/close tag combination detected.
+    -->
+    <rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>
+
+    <!--
+        Обнаружение пустых утверждений. (try, catch, finally, do, else, elseif, for, foreach, if, switch, while)
+        Также считается пустым, если полностью пустой или просто пустая строка или комментарий.
+
+        Пример:
+        if (true) { // Empty IF statement detected
+            // empty
+        }
+    -->
+    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+
+    <!--
+        Обнаружение безусловных операторов if и elseif.
+        Обнаружены условия, в которых установлены только истина или ложь.
+
+        Пример:
+        if (true) { // Avoid IF statements that are always true or false
+            echo 'Hello';
+        }
+    -->
+    <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
+
+    <!--
+        Обнаружение неиспользуемых параметров функции.
+        Однако это не будет обнаружено, если содержимое функции пусто или содержит только комментарии.
+
+        Пример:
+        function hoge($hoge) { // The method parameter $hoge is never used
+            echo 'Hello';
+        }
+
+        function fuga($fuga) {
+        }
+    -->
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+
+    <!--
+        Обнаруживает ненужные переопределенные методы, которые просто вызывают родителя.
+
+        Пример:
+        class Hoge
+        {
+            public function __construct()
+            {
+                echo 'Hello';
+            }
+        }
+
+        class Fuga extends Hoge
+        {
+            public function __construct() // Possible useless method overriding detected
+            {
+                parent::__construct();
+            }
+        }
+    -->
+    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+
+
+    <!--
+        Убедитесь, что ваши блоки документов соответствуют базовому форматированию.
+
+        Пример:
+        /** */
+
+        /** example
+         */
+    -->
+    <rule ref="Generic.Commenting.DocComment">
+        <exclude name="Generic.Commenting.DocComment.MissingShort"/>
+        <exclude name="Generic.Commenting.DocComment.ShortNotCapital"/>
+    </rule>
+
+    <!--
+        Запрещает использование условных выражений Йоды.
+
+        Пример:
+        $value = 10;
+
+        if (100 === $value) { // Usage of Yoda conditions is not allowed; switch the　expression order
+        }
+    -->
+    <rule ref="Generic.ControlStructures.DisallowYodaConditions"/>
+
+    <!--
+        Запрещает использовать устаревшие функции
+
+        Пример:
+        mbsplit('\s', 'hello world'); // Function mbsplit() has been deprecated
+    -->
+    <rule ref="Generic.PHP.DeprecatedFunctions"/>
+
+    <!--
+         Запрещает использовать суперглобальные переменные
+
+        Пример:
+        var_dump($_REQUEST); // The $_REQUEST superglobal should not be used; use $_GET, $_POST, or $_COOKIE instead
+    -->
+    <rule ref="Generic.PHP.DisallowRequestSuperglobal"/>
+
+    <!-- Запрещает использовать конструкцию goto -->
+    <rule ref="Generic.PHP.DiscourageGoto"/>
+
+    <!--
+        Запрещает использовать префикс @ для подавления ошибок
+
+        Пример:
+        @fopen('hoge.txt', 'r'); // Silencing errors is discouraged; found: @fopen('hoge.txt'...
+    -->
+    <rule ref="Generic.PHP.NoSilencedErrors"/>
+
+    <!--
+        Проверка на наличие лишних пробелов в скобках
+
+        Пример:
+        $hoge = 'hoge';
+        $fuga = ($hoge !== 'fuga' ); // Expected 0 space before close parenthesis; 1 found
+    -->
+    <rule ref="Generic.WhiteSpace.ArbitraryParenthesesSpacing"/>
+
+    <!--
+        Проверяет что вокруг квадратных скобок нет пробелов
+
+        Пример:
+        $array ['hoge']; // Space found before square bracket; expected "$array[" but found "$array ["
+        $array[ 'huga']; // Space found after square bracket; expected "['huga'" but found "[ 'huga'"
+    -->
+    <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
+
+    <!--
+        Проверяет, соответствует ли имя файла имени класса, содержащегося в файле.
+
+        Пример:
+        class Hoge
+        {
+        }
+
+        //название файла NoMatch
+    -->
+    <rule ref="Squiz.Classes.ClassFileName"/>
+
+    <!--
+    Проверьте правильность выравнивания звездочек в комментариях к документации.
+
+    Пример:
+    /**
+     *NoSpaceAfterStar
+       * SpaceBeforeStar
+     */
+    class Hoge
+    {
+    }
+    -->
+    <rule ref="Squiz.Commenting.DocCommentAlignment"/>
+
     <rule ref="Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase">
         <exclude-pattern>bootstrap.php</exclude-pattern>
     </rule>
 
     <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
         <exclude-pattern>install/index.php</exclude-pattern>
+        <exclude-pattern>/class.php</exclude-pattern>
+        <exclude-pattern>/ajax.php</exclude-pattern>
     </rule>
 
     <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
@@ -27,5 +310,7 @@
 
     <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
         <exclude-pattern>install/index.php</exclude-pattern>
+        <exclude-pattern>/class.php</exclude-pattern>
+        <exclude-pattern>/ajax.php</exclude-pattern>
     </rule>
 </ruleset>
