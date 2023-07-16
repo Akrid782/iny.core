@@ -27,5 +27,5 @@ abstract class ABaseType
     /**
      * @param mixed $value
      */
-    abstract public function normalize(mixed $value);
+    abstract public function normalize(mixed $value): mixed;
 }
