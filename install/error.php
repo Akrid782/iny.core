@@ -12,10 +12,10 @@ use Bitrix\Main\Localization\Loc;
 
 if ($exception = $APPLICATION->GetException()) {
     CAdminMessage::ShowMessage([
-            'TYPE' => 'ERROR',
-            'MESSAGE' => Loc::getMessage('MOD_INST_ERR'),
-            'DETAILS' => $exception->GetString(),
-            'HTML' => true,
+        'TYPE' => 'ERROR',
+        'MESSAGE' => Loc::getMessage('MOD_INST_ERR'),
+        'DETAILS' => $exception->GetString(),
+        'HTML' => true,
     ]);
 }
 ?>
