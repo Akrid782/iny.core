@@ -1,6 +1,6 @@
 <?php
 
-namespace INY\Core\PHPUnit;
+namespace INY\Core\Tests\PHPUnit;
 
 use PHPUnit\Framework;
 use Bitrix\Main\Application;
@@ -9,7 +9,7 @@ use Bitrix\Main\DB\SqlQueryException;
 /**
  * class TestCase
  *
- * @package INY\Core\PHPUnit
+ * @package INY\Core\Tests\PHPUnit
  */
 class TestCase extends Framework\TestCase
 {
