@@ -18,7 +18,7 @@ curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
   ./local/modules/iny.core/
  ```
 
-![Screenshot](/images/example_phpcs.png)
+![Screenshot](/docs/images/example_phpcs.png)
 
 ### Настройка CI/CD
 
