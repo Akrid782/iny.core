@@ -6,12 +6,12 @@
     <arg value="s"/>
     <arg name="report" value="code"/>
     <arg name="extensions" value="php"/>
+    <arg name="ignore" value="*/vendor*/"/>
 
     <rule ref="PSR12"/>
 
     <!--Документация методов -->
-    <rule ref="PEAR.Commenting.FunctionComment">
-
+    <rule ref="Squiz.Commenting.FunctionComment">
         <properties>
             <!--Должно пропускать ошибку наследованной документации -->
             <property name="skipIfInheritdoc" value="true"/>
@@ -21,11 +21,18 @@
         </properties>
 
         <!-- Отключена проверка описания метода -->
-        <exclude name="PEAR.Commenting.FunctionComment.MissingParamComment"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
 
         <!-- Отключена проверка на не понятная что, но она мешает когда в phpdoc все хорошо -->
-        <exclude name="PEAR.Commenting.FunctionComment.SpacingAfterParamType"/>
-        <exclude name="PEAR.Commenting.FunctionComment.MissingParamTag"/>
+        <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamType"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+        <exclude name="Squiz.Commenting.FunctionComment.EmptyThrows"/>
+
+        <!-- Исключение для магических методов -->
+        <exclude name="Squiz.Commenting.FunctionComment.Missing">
+            <message>Missing doc comment for function</message>
+            <source>.*__.*</source>
+        </exclude>
     </rule>
 
     <!-- Проверка на логические операторы "and" и "or", например if (1 and 2) плохо, а if (1 && 2) хорошо  -->
@@ -274,7 +281,9 @@
 
         //название файла NoMatch
     -->
-    <rule ref="Squiz.Classes.ClassFileName"/>
+    <rule ref="Squiz.Classes.ClassFileName">
+        <exclude-pattern>install/index.php</exclude-pattern>
+    </rule>
 
     <!--
     Проверьте правильность выравнивания звездочек в комментариях к документации.
@@ -301,11 +310,11 @@
     </rule>
 
     <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
-        <exclude-pattern>install/index.php</exclude-pattern>
+        <exclude-pattern type="relative">/install/index.php*</exclude-pattern>
     </rule>
 
     <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
-        <exclude-pattern>install/index.php</exclude-pattern>
+        <exclude-pattern type="relative">/install/index.php*</exclude-pattern>
     </rule>
 
     <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">

@@ -1,0 +1,6 @@
+parameters:
+    level: max
+    bootstrapFiles:
+        - bootstrap.php
+    excludePaths:
+        - */vendor/*

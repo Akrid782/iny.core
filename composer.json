@@ -1,0 +1,35 @@
+{
+  "name": "akird782/iny-core",
+  "description": "Базовый модуль для быстрой разработки на bitrix",
+  "minimum-stability": "stable",
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "n.ivanov",
+      "email": "akrid782@mail.ru"
+    }
+  ],
+  "scripts": {
+    "test:all": [
+      "@test:phpcs",
+      "@test:phpstan"
+    ],
+    "test:phpcs": "phpcs --standard=tests/PHPCS/phpcs.xml --runtime-set testVersion 8.1  ./",
+    "test:phpstan": "vendor/bin/phpstan analyse -c tests/PHPStan/phpstan.neon --ansi --debug ./"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "*",
+    "psr/log": "1.1.*",
+    "phpstan/phpstan": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "INY\\Core\\": "lib"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "INY\\Core\\Tests\\PHPUnit\\": "tests/PHPUnit"
+    }
+  }
+}

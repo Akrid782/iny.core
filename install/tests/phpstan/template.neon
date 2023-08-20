@@ -1,0 +1,6 @@
+parameters:
+    level: #LEVEL#
+    bootstrapFiles:
+        - #ROOT_PATH_MODULE#/bootstrap.php
+    excludePaths:
+        - */vendor/*

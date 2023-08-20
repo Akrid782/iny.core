@@ -9,7 +9,7 @@ use Bitrix\Main\DB\SqlQueryException;
 /**
  * class TestCase
  *
- * @package INY\Core\PHPUnit
+ * @package INY\Installations\PHPUnit
  */
 class TestCase extends Framework\TestCase
 {
@@ -22,7 +22,7 @@ class TestCase extends Framework\TestCase
     {
         static::assertTrue(
             class_exists(Application::class),
-            'Core isn\'t included. Pls, set bootstrap file.'
+            'Installations isn\'t included. Pls, set bootstrap file.'
         );
 
         parent::setUpBeforeClass();

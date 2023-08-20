@@ -10,7 +10,7 @@ const DisableEventsCheck = true;
 const NO_AGENT_CHECK = true;
 
 if (empty($_SERVER['DOCUMENT_ROOT'])) {
-    $_SERVER['DOCUMENT_ROOT'] = dirname(__DIR__, 4);
+    $_SERVER['DOCUMENT_ROOT'] = dirname(__DIR__, 5);
 }
 $DOCUMENT_ROOT = $_SERVER['DOCUMENT_ROOT'];
 

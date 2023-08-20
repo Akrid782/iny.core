@@ -10,3 +10,4 @@ $MESS['INY_CORE_INSTALL_TITLE'] = 'Установка модуля "Базовы
 $MESS['INY_CORE_UNINSTALL_TITLE'] = 'Удаление модуля "Базовый модуль (iny.core)"';
 $MESS['INY_CORE_PARTNER_NAME'] = 'Иванов Николай';
 $MESS['INY_CORE_PARTNER_URI'] = 'https://github.com/Akrid782/iny.core';
+$MESS['INY_CORE_PHP_STAN'] = 'Уровень проверки #LEVEL#';

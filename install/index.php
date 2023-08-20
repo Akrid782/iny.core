@@ -1,13 +1,13 @@
 <?php
 
-use Bitrix\Main\IO\File;
 use Bitrix\Main\Application;
-use Bitrix\Main\ModuleManager;
-use Bitrix\Main\Config\Option;
-use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\Engine\CurrentUser;
 use Bitrix\Main\ArgumentNullException;
 use Bitrix\Main\ArgumentOutOfRangeException;
+use Bitrix\Main\Config\Option;
+use Bitrix\Main\Engine\CurrentUser;
+use Bitrix\Main\IO\File;
+use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\ModuleManager;
 
 if (class_exists('iny_core')) {
     return;
@@ -26,7 +26,7 @@ class iny_core extends CModule
     public $PARTNER_URI;
     public $PARTNER_NAME;
     public $MODULE_GROUP_RIGHTS = 'N';
-    protected string $MODULE_FOLDER;
+    public string $MODULE_FOLDER;
 
     public function __construct()
     {
@@ -42,7 +42,7 @@ class iny_core extends CModule
         $this->PARTNER_NAME = Loc::getMessage('INY_CORE_PARTNER_NAME');
         $this->PARTNER_URI = Loc::getMessage('INY_CORE_PARTNER_URI');
 
-        $this->MODULE_FOLDER = __DIR__ . '/..';
+        $this->MODULE_FOLDER = dirname(__DIR__, 1);
     }
 
     /**
@@ -122,10 +122,11 @@ class iny_core extends CModule
      */
     public function InstallFiles(): void
     {
-        $postList = Application::getInstance()->getContext()->getRequest()->getPostList();
-        if ($postList->get('install_phpunit') === 'Y' && $postList->get('phpunit_version')) {
+        $httpParamList = Application::getInstance()->getContext()->getRequest()->toArray();
+
+        if ($httpParamList['install_phpunit'] === 'Y' && $httpParamList['phpunit_version']) {
             CopyDirFiles(
-                __DIR__ . '/phpunit/' . $postList->get('phpunit_version'),
+                __DIR__ . '/tests/phpunit/' . $httpParamList['phpunit_version'],
                 Application::getDocumentRoot(),
                 true,
                 true
@@ -134,8 +135,34 @@ class iny_core extends CModule
             Option::set(
                 $this->MODULE_ID,
                 '~PHP_UNIT',
-                $postList->get('phpunit_version')
+                $httpParamList['phpunit_version']
             );
+        }
+
+        if ($httpParamList['install_phpstan'] === 'Y' && $httpParamList['phpstan_level']) {
+            $template = file_get_contents(__DIR__ . '/tests/phpstan/template.neon');
+            if ($template) {
+                $phpstan = str_replace(
+                    [
+                        '#LEVEL#',
+                        '#ROOT_PATH_MODULE#',
+                    ],
+                    [
+                        $httpParamList['phpstan_level'],
+                        $this->MODULE_FOLDER,
+                    ],
+                    $template
+                );
+                file_put_contents(Application::getDocumentRoot() . '/phpstan.neon', $phpstan);
+
+                Option::set(
+                    $this->MODULE_ID,
+                    '~PHP_STAN',
+                    Loc::getMessage('INY_CORE_PHP_STAN', [
+                        '#LEVEL#' => $httpParamList['phpstan_level'],
+                    ])
+                );
+            }
         }
     }
 
@@ -147,10 +174,14 @@ class iny_core extends CModule
         if (Option::get($this->MODULE_ID, '~PHP_UNIT')) {
             File::deleteFile(Application::getDocumentRoot() . '/phpunit.xml');
         }
+
+        if (Option::get($this->MODULE_ID, '~PHP_STAN') === 'Y') {
+            File::deleteFile(Application::getDocumentRoot() . '/phpstan.neon');
+        }
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function InstallDB(): bool
     {
@@ -163,11 +194,11 @@ class iny_core extends CModule
      * @return void
      * @throws ArgumentNullException
      */
-    public function UnInstallDB(): void
+    public function unInstallDB(): void
     {
-        $postList = Application::getInstance()->getContext()->getRequest()->getPostList();
+        $postList = Application::getInstance()->getContext()->getRequest()->toArray();
 
-        if ($postList->get('save_data') !== 'Y') {
+        if ($postList['save_data'] !== 'Y') {
             Option::delete($this->MODULE_ID);
         }
 
@@ -177,7 +208,7 @@ class iny_core extends CModule
     /**
      * @return void
      */
-    protected function checkPermission(): void
+    private function checkPermission(): void
     {
         global $APPLICATION;
 
@@ -189,14 +220,14 @@ class iny_core extends CModule
     /**
      * @return void
      */
-    protected function showError(): void
+    private function showError(): void
     {
         global $APPLICATION;
 
         if ($APPLICATION->GetException()) {
             $APPLICATION->IncludeAdminFile(
                 Loc::getMessage('INY_CORE_MODULE_INSTALL_ERROR'),
-                $this->MODULE_FOLDER . "/install/error.php"
+                $this->MODULE_FOLDER . '/install/error.php'
             );
         }
     }
