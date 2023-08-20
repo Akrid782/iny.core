@@ -20,13 +20,13 @@ CAdminMessage::ShowNote(Loc::getMessage('MOD_INST_OK'));
             <?php
             if ($phpunit = Option::get('iny.core', '~PHP_UNIT')) : ?>
                 <li>PHPUnit: <?= $phpunit ?></li>
-                <?php
+            <?php
             endif; ?>
 
             <?php
             if ($phpstan = Option::get('iny.core', '~PHP_STAN') === 'Y') : ?>
                 <li>PHPStan: <?= $phpstan ?> </li>
-                <?php
+            <?php
             endif; ?>
         </ul>
     </div>

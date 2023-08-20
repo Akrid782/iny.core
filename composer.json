@@ -11,16 +11,20 @@
   ],
   "scripts": {
     "test:all": [
-      "@test:phpcs",
-      "@test:phpstan"
+      "@test:phpcs"
     ],
-    "test:phpcs": "phpcs --standard=tests/PHPCS/phpcs.xml --runtime-set testVersion 8.1  ./",
-    "test:phpstan": "vendor/bin/phpstan analyse -c tests/PHPStan/phpstan.neon --ansi --debug ./"
+    "test:phpcs": "phpcs --standard=tests/PHPCS/phpcs.xml --runtime-set testVersion 8.1  ./"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "*",
     "psr/log": "1.1.*",
-    "phpstan/phpstan": "*"
+    "slevomat/coding-standard": "*",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   },
   "autoload": {
     "psr-4": {

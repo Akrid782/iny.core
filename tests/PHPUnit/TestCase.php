@@ -16,6 +16,7 @@ class TestCase extends Framework\TestCase
     protected static bool $useTransaction = true;
 
     /**
+     * @return void
      * @throws SqlQueryException
      */
     public static function setUpBeforeClass(): void
@@ -32,6 +33,7 @@ class TestCase extends Framework\TestCase
     }
 
     /**
+     * @return void
      * @throws SqlQueryException
      */
     protected static function openTransaction(): void
@@ -40,6 +42,7 @@ class TestCase extends Framework\TestCase
     }
 
     /**
+     * @return void
      * @throws SqlQueryException
      */
     public static function tearDownAfterClass(): void
@@ -51,6 +54,7 @@ class TestCase extends Framework\TestCase
     }
 
     /**
+     * @return void
      * @throws SqlQueryException
      */
     protected static function rollbackTransaction(): void
