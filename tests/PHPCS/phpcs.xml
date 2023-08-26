@@ -29,6 +29,86 @@
     ];
     -->
     <rule ref="SlevomatCodingStandard.Arrays.AlphabeticallySortedByKeys"/>
+
+    <!-- НАЧАЛО правила для подсказок и phpdoc -->
+    <!--
+    Обеспечивает использование сокращенных вариантов скалярных подсказок в phpDocs:
+    int вместо integer и bool вместо boolean. Это сделано для обеспечения совместимости с собственными скалярными
+    подсказками, которые также допускают только сокращенные варианты.
+
+    Пример:
+    /**
+     * @param array $s
+     * @param integer $bn // ERROR Expected "int" but found "integer" in @param annotation.
+     *
+     * @return array
+     */
+
+    /**
+     * @param array $s
+     * @param int $bn
+     *
+     * @return array
+     */
+    -->
+    <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
+
+    <!--
+    Проверяет, присутствует ли символ обнуляемости ?перед каждым обнуляемым и необязательным
+    параметром (которые помечены как = null)
+
+    Пример:
+    function get(
+        int $foo = null, // ERROR Parameter $foo has null default value, but is not marked as nullable.
+        ?int $bar = null
+    ) {
+        ....
+    }
+    -->
+    <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/>
+
+    <!--
+    Проверяет наличие одного пробела между подсказкой и именем параметра:Foo $foo
+    Проверяет, нет ли пробелов между символом, допускающим значение NULL, и подсказкой:?Foo
+    -->
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHintSpacing"/>
+    <!-- КОНЕЦ правила для подсказок и phpdoc -->
+
+    <!-- НАЧАЛО правила для переменных -->
+    <!--
+    Запрещает использование переменных переменных.
+
+    Пример:
+    //ERROR Use of variable variable is disallowed.
+    $varName = 'myVariable';
+    $$varName = 'Hello, world!';
+    -->
+    <rule ref="SlevomatCodingStandard.Variables.DisallowVariableVariable"/>
+
+    <!--
+    Ищет не используемые переменные
+
+    Пример:
+    function get() {
+        $result = 1; // ERROR Unused variable $varName
+
+        return 1;
+    }
+    -->
+    <rule ref="SlevomatCodingStandard.Variables.UnusedVariable"/>
+    <!-- КОНЕЦ правила для переменных -->
+
+    <!-- НАЧАЛО правил для операторов -->
+    <!--
+    Запрещает использование свободных операторов ==и !=операторов сравнения. Вместо этого используйте ===их !==,
+    они гораздо более безопасны и предсказуемы.
+
+    Пример:
+    if($a == $b) ERROR [x] Operator == is disallowed, use === instead
+    -->
+    <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators"/>
+    <!-- КОНЕЦ правил для операторов -->
+
     <!-- КОНЕЦ Кастомизации стандартизации кода -->
 
     <!--Документация методов -->
@@ -48,6 +128,9 @@
         <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamType"/>
         <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
         <exclude name="Squiz.Commenting.FunctionComment.EmptyThrows"/>
+
+        <!-- Данная настройка заменена на SlevomatCodingStandard.TypeHints.LongTypeHints -->
+        <exclude name="Squiz.Commenting.FunctionComment.IncorrectParamVarName"/>
 
         <!-- Исключение для магических методов -->
         <exclude name="Squiz.Commenting.FunctionComment.Missing">
@@ -320,24 +403,39 @@
     -->
     <rule ref="Squiz.Commenting.DocCommentAlignment"/>
 
+    <!--
+    Исключение из-за особенностей некоторых констант в bitrix
+    -->
     <rule ref="Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase">
         <exclude-pattern>bootstrap.php</exclude-pattern>
     </rule>
 
+    <!--
+    Исключение из-за особенностей файлов установки модулей и компонентов в bitrix
+    -->
     <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
         <exclude-pattern>install/index.php</exclude-pattern>
         <exclude-pattern>/class.php</exclude-pattern>
         <exclude-pattern>/ajax.php</exclude-pattern>
     </rule>
 
+    <!--
+    Исключение из-за особенностей файлов установки модулей в bitrix
+    -->
     <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
         <exclude-pattern type="relative">/install/index.php*</exclude-pattern>
     </rule>
 
+    <!--
+    Исключение из-за особенностей файлов установки модулей в bitrix
+    -->
     <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
         <exclude-pattern type="relative">/install/index.php*</exclude-pattern>
     </rule>
 
+    <!--
+    Исключение из-за особенностей файлов установки модулей и компонентов в bitrix
+    -->
     <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
         <exclude-pattern>install/index.php</exclude-pattern>
         <exclude-pattern>/class.php</exclude-pattern>

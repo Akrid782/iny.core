@@ -1,13 +1,13 @@
 <?php
 
+use Bitrix\Main\IO\File;
 use Bitrix\Main\Application;
+use Bitrix\Main\Config\Option;
+use Bitrix\Main\ModuleManager;
+use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Engine\CurrentUser;
 use Bitrix\Main\ArgumentNullException;
 use Bitrix\Main\ArgumentOutOfRangeException;
-use Bitrix\Main\Config\Option;
-use Bitrix\Main\Engine\CurrentUser;
-use Bitrix\Main\IO\File;
-use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\ModuleManager;
 
 if (class_exists('iny_core')) {
     return;
@@ -181,7 +181,7 @@ class iny_core extends CModule
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function InstallDB(): bool
     {
