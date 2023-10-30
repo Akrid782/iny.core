@@ -11,24 +11,7 @@
     <rule ref="PSR12"/>
 
     <!-- НАЧАЛО Кастомизации стандартизации кода -->
-    <config name="installed_paths" value="../../../vendor/slevomat/coding-standard"/>
-
-    <!--
-    Массивы должны быть определены с помощью ключей в алфавитном порядке.
-    Он определяет, куда следует вставлять новые записи. Это уменьшает конфликты слияния и дублирование записей.
-
-    Пример:
-    $test = [ //ERROR Keyed multi-line arrays must be sorted alphabetically.
-        'J' => 435,
-        'A' => 546,
-    ];
-
-    $test = [
-        'A' => 435,
-        'B' => 546,
-    ];
-    -->
-    <rule ref="SlevomatCodingStandard.Arrays.AlphabeticallySortedByKeys"/>
+    <config name="installed_paths" value="vendor/slevomat/coding-standard"/>
 
     <!-- НАЧАЛО правила для подсказок и phpdoc -->
     <!--

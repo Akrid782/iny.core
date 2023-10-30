@@ -2,7 +2,7 @@
   "name": "akird782/iny-core",
   "description": "Базовый модуль для быстрой разработки на bitrix",
   "minimum-stability": "stable",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "authors": [
     {
       "name": "n.ivanov",
@@ -11,15 +11,24 @@
   ],
   "scripts": {
     "test:all": [
-      "@test:phpcs"
+      "@test:phpcs",
+      "@test:psalm"
     ],
-    "test:phpcs": "phpcs --standard=tests/PHPCS/phpcs.xml --runtime-set testVersion 8.1  ./"
+    "test:phpcs": "phpcs --standard=phpcs.xml --runtime-set testVersion 8.1  ./",
+    "test:psalm": "vendor/bin/psalm --config=psalm.xml --alter --issues=UnusedVariable --dry-run  "
   },
   "require-dev": {
+    "roave/security-advisories": "dev-latest",
     "squizlabs/php_codesniffer": "*",
     "psr/log": "1.1.*",
     "slevomat/coding-standard": "*",
-    "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "vimeo/psalm": "^4.19"
+  },
+  "extra": {
+    "psalm": {
+      "pluginClass": "INY\\Core\\Tests\\Psalm\\Plugin\\Bitrix"
+    }
   },
   "config": {
     "allow-plugins": {
@@ -33,7 +42,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "INY\\Core\\Tests\\PHPUnit\\": "tests/PHPUnit"
+      "INY\\Core\\Tests\\PHPUnit\\": "tests/PHPUnit",
+      "INY\\Core\\Tests\\Psalm\\Plugin\\": "tests/Psalm/Plugin"
     }
   }
 }

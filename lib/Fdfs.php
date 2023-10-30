@@ -2,7 +2,9 @@
 
 namespace INY\Core;
 
+use Bitrix\Main\Loader;
 use Bitrix\Crm\CompanyTable;
+use Bitrix\Main\LoaderException;
 
 /**
  * class Fdfs
@@ -12,16 +14,27 @@ use Bitrix\Crm\CompanyTable;
 class Fdfs
 {
     /**
-     * @param array $s
-     * @param integer $bn
+     * @param array<int, string> $s
+     * @param int $bn
      *
      * @return array
+     * @throws LoaderException
      */
-    public static function isfsdf(array $s, int $bn)
+    public static function isfsdf(array $s, $bn): array
     {
-        $a = CompanyTable::getById(1);
+        Loader::includeModule('crm');
+
+        $bb = $s['str'];
+
+        $a = CompanyTable::getById(1)->fetch();
 
         $b = $a['ID'];
+
+        $b = $bn;
+
+
+        $bnb = $b;
+
 
         $sdf = [
             'A' => 435,
@@ -32,6 +45,8 @@ class Fdfs
             echo '';
         }
 
-        return [...$s, 'ID' => $b];
+        CompanyTable::getById(11);
+
+        return [...$s, ...$bb, 'ID' => $b];
     }
 }

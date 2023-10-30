@@ -12,25 +12,24 @@ const NO_AGENT_CHECK = true;
 if (empty($_SERVER['DOCUMENT_ROOT'])) {
     $_SERVER['DOCUMENT_ROOT'] = dirname(__DIR__, 5);
 }
-$DOCUMENT_ROOT = $_SERVER['DOCUMENT_ROOT'];
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before.php';
 
-$mainModuleId = 'iny.core';
+Bitrix\Main\Loader::includeModule('iny.core');
 
-Bitrix\Main\Loader::includeModule($mainModuleId);
-
-$allFiles = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($DOCUMENT_ROOT . '/local/modules/'));
-$allFiles->setMaxDepth(6);
-$phpFiles = new RegexIterator($allFiles, '/(\/tests\/\b)(?!.*\b\1\b)/');
+$fileList = new RecursiveIteratorIterator(
+    new RecursiveDirectoryIterator($_SERVER['DOCUMENT_ROOT'] . '/local/modules/')
+);
+$fileList->setMaxDepth(6);
+$phpFileList = new RegexIterator($fileList, '/(\/tests\/\b)(?!.*\b\1\b)/');
 
 $moduleId = '';
-foreach ($phpFiles as $phpFile) {
+foreach ($phpFileList as $phpFile) {
     $filePathFile = $phpFile->getRealPath();
     if (stripos($filePathFile, "/{$moduleId}/") === false) {
         $moduleId = GetModuleID($filePathFile);
 
-        if ($moduleId !== $mainModuleId) {
+        if ($moduleId !== 'iny.core') {
             Bitrix\Main\Loader::includeModule($moduleId);
         }
     }
@@ -42,19 +41,18 @@ spl_autoload_register(
             $path = $_SERVER['DOCUMENT_ROOT'];
             $pathList = explode('\\', $className);
             $module = mb_strtolower(
-                implode(
-                    '.',
-                    [
-                        $pathList[0],
-                        $pathList[1],
-                    ]
-                )
+                implode('.', [
+                    $pathList[0],
+                    $pathList[1],
+                ])
             );
+
             if (file_exists($path . '/local/modules/' . $module)) {
                 $path .= '/local/modules/';
             } else {
                 $path .= '/bitrix/modules/';
             }
+
             $path .= $module . '/tests/';
             unset($pathList[0], $pathList[1], $pathList[2]);
 

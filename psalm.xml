@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<psalm
+        autoloader="tests/Psalm/autoload.php"
+        errorLevel="1"
+        resolveFromConfigFile="true"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="https://getpsalm.org/schema/config"
+        xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+        <directory name="lib"/>
+    </projectFiles>
+
+    <issueHandlers>
+        <InvalidGlobal errorLevel="suppress"/>
+    </issueHandlers>
+
+    <plugins>
+        <pluginClass class="\INY\Core\Tests\Psalm\Plugin\Bitrix">
+            <bitrixDir>.</bitrixDir>
+            <includeModules>
+                <module name="crm"/>
+                <module name="sale"/>
+            </includeModules>
+        </pluginClass>
+    </plugins>
+</psalm>
