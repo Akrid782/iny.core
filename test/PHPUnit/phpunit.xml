@@ -7,7 +7,8 @@
          failOnWarning="true"
          colors="true"
          failOnEmptyTestSuite="true"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.2/phpunit.xsd" cacheDirectory=".phpunit.cache"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.2/phpunit.xsd"
+         cacheDirectory=".phpunit.cache"
          beStrictAboutCoverageMetadata="true">
     <coverage/>
     <testsuites>

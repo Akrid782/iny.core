@@ -1,6 +1,6 @@
 <?php
 
-namespace INY\Core\PHPUnit;
+namespace INY\Core\Test\PHPUnit;
 
 use ReflectionClass;
 use PHPUnit\Framework;
@@ -11,7 +11,7 @@ use Bitrix\Main\DB\SqlQueryException;
 /**
  * class TestCase
  *
- * @package INY\Installations\PHPUnit
+ * @package PHPUnit;
  */
 class TestCase extends Framework\TestCase
 {

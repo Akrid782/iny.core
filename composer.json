@@ -1,6 +1,6 @@
 {
   "name": "akird782/iny-core",
-  "description": "Базовый модуль для быстрой разработки на bitrix",
+  "description": "Базовый модуль для быстрой разработки в bitrix",
   "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
@@ -11,28 +11,30 @@
   ],
   "scripts": {
     "test:all": [
-      "@test:phpcs",
-      "@test:psalm"
+      "@test:phpcs"
     ],
-    "test:phpcs": "phpcs --standard=phpcs.xml --runtime-set testVersion 8.1  ./",
-    "test:psalm": "vendor/bin/psalm --config=psalm.xml --alter --issues=UnusedVariable --dry-run  "
+    "test:phpcs": "phpcs --standard=phpcs.xml --runtime-set testVersion 8.1  ./"
+  },
+  "require": {
+    "wikimedia/composer-merge-plugin": "dev-master"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
-    "squizlabs/php_codesniffer": "*",
-    "psr/log": "1.1.*",
-    "slevomat/coding-standard": "*",
-    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-    "vimeo/psalm": "^4.19"
+    "squizlabs/php_codesniffer": "^3.7.2",
+    "slevomat/coding-standard": "^8.14.1",
+    "phpunit/phpunit": "10.2.*"
   },
   "extra": {
-    "psalm": {
-      "pluginClass": "INY\\Core\\Tests\\Psalm\\Plugin\\Bitrix"
+    "merge-plugin": {
+      "require": [
+        "../../../bitrix/composer-bx.json"
+      ]
     }
   },
   "config": {
     "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "wikimedia/composer-merge-plugin": true
     }
   },
   "autoload": {
@@ -42,8 +44,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "INY\\Core\\Tests\\PHPUnit\\": "tests/PHPUnit",
-      "INY\\Core\\Tests\\Psalm\\Plugin\\": "tests/Psalm/Plugin"
+      "INY\\Core\\Test\\PHPUnit\\": "test/PHPUnit"
     }
   }
 }

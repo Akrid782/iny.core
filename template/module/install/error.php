@@ -20,8 +20,7 @@ if ($exception = $APPLICATION->getException()) {
 }
 ?>
 
-<form action="<?= $APPLICATION->getCurPage() ?>" name="form1" method="post">
-    <?= bitrix_sessid_post() ?>
+<form action="<?= $APPLICATION->getCurPage() ?>" name="form1" method="post"> <?= bitrix_sessid_post() ?>
     <input type="hidden" name="lang" value="<?= LANG ?>" />
     <input type="submit" name="" value="<?= Loc::getMessage('MOD_BACK') ?>" />
 </form>

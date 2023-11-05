@@ -12,7 +12,6 @@
 
     <!-- НАЧАЛО Кастомизации стандартизации кода -->
     <config name="installed_paths" value="vendor/slevomat/coding-standard"/>
-
     <!-- НАЧАЛО правила для подсказок и phpdoc -->
     <!--
     Обеспечивает использование сокращенных вариантов скалярных подсказок в phpDocs:
@@ -78,7 +77,9 @@
         return 1;
     }
     -->
-    <rule ref="SlevomatCodingStandard.Variables.UnusedVariable"/>
+    <rule ref="SlevomatCodingStandard.Variables.UnusedVariable">
+        <exclude-pattern>install/version.php</exclude-pattern>
+    </rule>
     <!-- КОНЕЦ правила для переменных -->
 
     <!-- НАЧАЛО правил для операторов -->
@@ -90,8 +91,65 @@
     if($a == $b) ERROR [x] Operator == is disallowed, use === instead
     -->
     <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators"/>
-    <!-- КОНЕЦ правил для операторов -->
 
+    <!--
+    Запрещает использование синтаксиса подсказки типа массива (например int[], , bool[][])
+    в phpDocs в пользу синтаксиса подсказки общего типа (например, array<int>, array<array<bool>>).
+    -->
+    <rule ref="SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax"/>
+
+    <!--
+    Обеспечивает единообразное форматирование возвращаемых типовых указаний.
+
+    Пример:
+    function foo(): ?int
+    -->
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing"/>
+
+    <!--
+    Запрещено использовать Запрещает обратную косую черту в операторе use.
+
+    Пример:
+    use \Foo\Bar;
+    -->
+    <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash"/>
+
+    <!--
+    Тернарный оператор необходимо переформатировать, если оператор не возглавляет строку.
+
+    Привет:
+    # плохо
+    $t = $someCondition ?
+        $thenThis :
+        $otherwiseThis;
+
+    # хорошо
+    $t = $someCondition
+        ? $thenThis
+        : $otherwiseThis;
+    -->
+    <rule ref="SlevomatCodingStandard.ControlStructures.DisallowTrailingMultiLineTernaryOperator"/>
+
+    <!--
+    Если это возможно, требуется короткий тернарный оператор ?:
+    Пример:
+    # плохо
+    $var = $a ? $a : 45
+
+    # хорошо
+    $var = $a ?: 45
+    -->
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator"/>
+
+    <!--
+    Обеспечивает максимальную когнитивную сложность функций.
+
+    Sniff предоставляет следующие настройки:
+        - warningThreshold: по умолчанию 6
+        - errorThreshold: по умолчанию 6
+    -->
+    <rule ref="SlevomatCodingStandard.Complexity.Cognitive"/>
+    <!-- КОНЕЦ правил для операторов -->
     <!-- КОНЕЦ Кастомизации стандартизации кода -->
 
     <!--Документация методов -->
@@ -114,6 +172,8 @@
 
         <!-- Данная настройка заменена на SlevomatCodingStandard.TypeHints.LongTypeHints -->
         <exclude name="Squiz.Commenting.FunctionComment.IncorrectParamVarName"/>
+
+        <exclude name="Squiz.Commenting.FunctionComment.InvalidReturn"/>
 
         <!-- Исключение для магических методов -->
         <exclude name="Squiz.Commenting.FunctionComment.Missing">
@@ -410,18 +470,18 @@
     </rule>
 
     <!--
-    Исключение из-за особенностей файлов установки модулей в bitrix
-    -->
-    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
-        <exclude-pattern type="relative">/install/index.php*</exclude-pattern>
-    </rule>
-
-    <!--
     Исключение из-за особенностей файлов установки модулей и компонентов в bitrix
     -->
     <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
         <exclude-pattern>install/index.php</exclude-pattern>
         <exclude-pattern>/class.php</exclude-pattern>
         <exclude-pattern>/ajax.php</exclude-pattern>
+    </rule>
+
+    <!--
+    Проверка длинны строки в 120 символов
+    -->
+    <rule ref="Generic.Files.LineLength.TooLong">
+        <exclude-pattern>template/module</exclude-pattern>
     </rule>
 </ruleset>

@@ -1,26 +1,28 @@
 <?php
 
-namespace INY\Core\Traits;
+namespace INY\Core\Trait;
 
 /**
- * Trait Singleton
+ * Trait SingletonMultiple
  *
- * @package INY\Core\Traits
+ * @package INY\Core\Trait
  */
-trait Singleton
+trait SingletonMultiple
 {
-    protected static ?self $instance = null;
+    protected static ?array $instance = null;
 
     /**
-     * @return Singleton
+     * @param string|int $key
+     *
+     * @return self
      */
-    final public function getInstance(): static
+    final public function getInstance(string|int $key): static
     {
-        if (!static::$instance) {
-            static::$instance = new static();
+        if (!static::$instance[$key]) {
+            static::$instance[$key] = new static();
         }
 
-        return static::$instance;
+        return static::$instance[$key];
     }
 
     /**

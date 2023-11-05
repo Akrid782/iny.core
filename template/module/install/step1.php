@@ -14,7 +14,7 @@ use Bitrix\Main\Localization\Loc;
 <form action="<?= $APPLICATION->getCurPage() ?>" name="form1" method="post">
     <?= bitrix_sessid_post() ?>
     <input type="hidden" name="lang" value="<?= LANGUAGE_ID ?>" />
-    <input type="hidden" name="id" value="iny.core" />
+    <input type="hidden" name="id" value="TEMPLATE_REPLACE_MODULE_CODE" />
     <input type="hidden" name="install" value="Y" />
     <input type="hidden" name="step" value="2" />
     <div>

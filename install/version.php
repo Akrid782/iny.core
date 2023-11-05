@@ -1,6 +1,6 @@
 <?php
 
 $moduleVersion = [
-    'VERSION' => '0.0.1',
-    'VERSION_DATE' => '2023-06-17 16:41:00',
+    'VERSION' => '0.0.3',
+    'VERSION_DATE' => '2023-11-05 15:10:55',
 ];
