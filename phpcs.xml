@@ -10,9 +10,61 @@
 
     <rule ref="PSR12"/>
 
-    <!-- НАЧАЛО Кастомизации стандартизации кода -->
     <config name="installed_paths" value="vendor/slevomat/coding-standard"/>
-    <!-- НАЧАЛО правила для подсказок и phpdoc -->
+
+    <!--
+    Обнаруживает бесполезные тернарные операторы.
+
+    Пример:
+    # Плохо
+    $value = ($condition) ? $result1 : $result2;
+    if ($condition) {
+        $value = $result1;
+    } else {
+        $value = $result2;
+    }
+
+    # Хорошо
+    $value = ($condition) ? $result1 : $result2;
+    -->
+    <rule ref="SlevomatCodingStandard.ControlStructures.UselessTernaryOperator"/>
+
+    <!--
+    Обнаруживает лишние условия if с последующим оператором return.
+
+    Пример:
+    # Хорошо
+    function myFunction($value) {
+        if ($value === null) {
+            return;
+        }
+
+        // код, выполняемый, если $value не равно null
+    }
+
+    # Плохо
+    function myFunction($value) {
+        if ($value === null) {
+            return;
+        } else {
+            // код, выполняемый, если $value не равно null
+            return;
+        }
+    }
+    -->
+    <rule ref="SlevomatCodingStandard.ControlStructures.UselessIfConditionWithReturn"/>
+
+    <!--
+    В PHP 7.1+ можно объявлять видимость констант класса. Подобно необязательному объявлению видимости для свойств и
+    методов, которое фактически требуется в нормальных стандартах кодирования, этот фрагмент также требует объявления
+    видимости для всех констант класса.
+
+    Пример:
+    const FOO = 1; // visibility missing!
+    public const BAR = 2; // correct
+    -->
+    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility"/>
+
     <!--
     Обеспечивает использование сокращенных вариантов скалярных подсказок в phpDocs:
     int вместо integer и bool вместо boolean. Это сделано для обеспечения совместимости с собственными скалярными
@@ -36,7 +88,7 @@
     <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
 
     <!--
-    Проверяет, присутствует ли символ обнуляемости ?перед каждым обнуляемым и необязательным
+    Проверяет, присутствует ли символ "?" перед каждым и необязательным
     параметром (которые помечены как = null)
 
     Пример:
@@ -52,11 +104,13 @@
     <!--
     Проверяет наличие одного пробела между подсказкой и именем параметра:Foo $foo
     Проверяет, нет ли пробелов между символом, допускающим значение NULL, и подсказкой:?Foo
+
+    Пример:
+    1. public function myFunction(string$param1, int$param2): void // ERROR
+    1. public function myFunction(string  $param1, int  $param2): void // ERROR
     -->
     <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHintSpacing"/>
-    <!-- КОНЕЦ правила для подсказок и phpdoc -->
 
-    <!-- НАЧАЛО правила для переменных -->
     <!--
     Запрещает использование переменных переменных.
 
@@ -80,12 +134,10 @@
     <rule ref="SlevomatCodingStandard.Variables.UnusedVariable">
         <exclude-pattern>install/version.php</exclude-pattern>
     </rule>
-    <!-- КОНЕЦ правила для переменных -->
 
-    <!-- НАЧАЛО правил для операторов -->
     <!--
-    Запрещает использование свободных операторов ==и !=операторов сравнения. Вместо этого используйте ===их !==,
-    они гораздо более безопасны и предсказуемы.
+    Запрещает использование свободных операторов ==и !=операторов сравнения. Вместо этого используйте === или !==,
+    они гораздо более безопасны и предсказуемые.
 
     Пример:
     if($a == $b) ERROR [x] Operator == is disallowed, use === instead
@@ -107,10 +159,15 @@
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing"/>
 
     <!--
-    Запрещено использовать Запрещает обратную косую черту в операторе use.
+    Запрещено использовать обратную косую черту в операторе use.
 
     Пример:
+
+    # Плохо
     use \Foo\Bar;
+
+    # Хорошо
+    use Foo\Bar;
     -->
     <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash"/>
 
@@ -132,6 +189,7 @@
 
     <!--
     Если это возможно, требуется короткий тернарный оператор ?:
+
     Пример:
     # плохо
     $var = $a ? $a : 45
@@ -149,8 +207,6 @@
         - errorThreshold: по умолчанию 6
     -->
     <rule ref="SlevomatCodingStandard.Complexity.Cognitive"/>
-    <!-- КОНЕЦ правил для операторов -->
-    <!-- КОНЕЦ Кастомизации стандартизации кода -->
 
     <!--Документация методов -->
     <rule ref="Squiz.Commenting.FunctionComment">
@@ -198,7 +254,11 @@
         Проверка на пробел после приведение типов
 
         Пример:
+
+        # Хорошо
         $hoge = (int) '123';
+
+        # Плохо
         $fuga = (int)'123'; // Expected 1 space(s) after cast statement; 0 found
     -->
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
@@ -207,7 +267,11 @@
         Проверяет интервал после оператора !
 
         Пример:
+
+        # Плохо
         $hoge = ! true; // Expected 1 space(s) after NOT operator; 0 found
+
+        # Хорошо
         $fuga = !true;
     -->
     <rule ref="Generic.Formatting.SpaceAfterNot">

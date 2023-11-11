@@ -13,7 +13,7 @@
     "test:all": [
       "@test:phpcs"
     ],
-    "test:phpcs": "phpcs --standard=phpcs.xml --runtime-set testVersion 8.1  ./"
+    "test:phpcs": "vendor/bin/phpcs --standard=phpcs.xml --runtime-set testVersion 8.1  ./"
   },
   "require": {
     "wikimedia/composer-merge-plugin": "dev-master"

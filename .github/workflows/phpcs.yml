@@ -10,8 +10,11 @@ on:
       - "**.php"
       - ".github/workflows/phpcs.yml"
 
+permissions:
+  contents: read
+
 jobs:
-  phplint:
+  php-lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,11 +30,20 @@ jobs:
         with:
           fetch-depth: 0 # important!
 
-      - name: Install PHP_CodeSniffer
-        run: |
-          curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
-          php phpcs.phar --version
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
 
       - name: Run PHP_CodeSniffer
-        run: |
-          php phpcs.phar --standard=./phpcs.xml --runtime-set testVersion 8.1 ./
+        run: composer test:phpcs
