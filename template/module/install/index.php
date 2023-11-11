@@ -7,16 +7,16 @@ use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Engine\CurrentUser;
 use Bitrix\Main\ArgumentNullException;
 
-if (class_exists('iny_core')) {
+if (class_exists('TEMPLATE_REPLACE_MODULE_CODE_CLASS')) {
     return;
 }
 
 /**
- * class iny_core
+ * class TEMPLATE_REPLACE_MODULE_CODE_CLASS
  */
-class iny_core extends CModule
+class TEMPLATE_REPLACE_MODULE_CODE_CLASS extends CModule
 {
-    public $MODULE_ID = 'iny.core';
+    public $MODULE_ID = 'TEMPLATE_REPLACE_MODULE_CODE';
     public $MODULE_VERSION;
     public $MODULE_VERSION_DATE;
     public $MODULE_NAME;
@@ -35,10 +35,10 @@ class iny_core extends CModule
         $this->MODULE_VERSION = $moduleVersion['VERSION'];
         $this->MODULE_VERSION_DATE = $moduleVersion['VERSION_DATE'];
 
-        $this->MODULE_NAME = Loc::getMessage('INY_CORE_MODULE_NAME');
-        $this->MODULE_DESCRIPTION = Loc::getMessage('INY_CORE_MODULE_DESCRIPTION');
-        $this->PARTNER_NAME = Loc::getMessage('INY_CORE_PARTNER_NAME');
-        $this->PARTNER_URI = Loc::getMessage('INY_CORE_PARTNER_URI');
+        $this->MODULE_NAME = Loc::getMessage('TEMPLATE_REPLACE_MODULE_CODE_CLASS_UPPER_MODULE_NAME');
+        $this->MODULE_DESCRIPTION = Loc::getMessage('TEMPLATE_REPLACE_MODULE_CODE_CLASS_UPPER_MODULE_DESCRIPTION');
+        $this->PARTNER_NAME = Loc::getMessage('TEMPLATE_REPLACE_MODULE_CODE_CLASS_UPPER_PARTNER_NAME');
+        $this->PARTNER_URI = Loc::getMessage('TEMPLATE_REPLACE_MODULE_CODE_CLASS_UPPER_PARTNER_URI');
 
         $this->MODULE_FOLDER = dirname(__DIR__, 1);
     }
@@ -52,7 +52,7 @@ class iny_core extends CModule
 
         if (PHP_VERSION < 8.1) {
             $APPLICATION->throwException(
-                Loc::getMessage('INY_CORE_MODULE_INSTALL_ERROR_MINIMUM_VERSION_PHP', [
+                Loc::getMessage('TEMPLATE_REPLACE_MODULE_CODE_CLASS_UPPER_MODULE_INSTALL_ERROR_MINIMUM_VERSION_PHP', [
                     '#VERSION#' => PHP_VERSION,
                 ])
             );
@@ -65,7 +65,7 @@ class iny_core extends CModule
             case 0:
             case 1:
                 $APPLICATION->includeAdminFile(
-                    Loc::getMessage('INY_CORE_INSTALL_TITLE'),
+                    Loc::getMessage('TEMPLATE_REPLACE_MODULE_CODE_CLASS_UPPER_INSTALL_TITLE'),
                     $this->MODULE_FOLDER . '/install/step1.php'
                 );
                 break;
@@ -75,7 +75,7 @@ class iny_core extends CModule
                 }
 
                 $APPLICATION->includeAdminFile(
-                    Loc::getMessage('INY_CORE_INSTALL_TITLE'),
+                    Loc::getMessage('TEMPLATE_REPLACE_MODULE_CODE_CLASS_UPPER_INSTALL_TITLE'),
                     $this->MODULE_FOLDER . '/install/step2.php'
                 );
                 break;
@@ -97,7 +97,7 @@ class iny_core extends CModule
             case 0:
             case 1:
                 $APPLICATION->includeAdminFile(
-                    Loc::getMessage('INY_CORE_UNINSTALL_TITLE'),
+                    Loc::getMessage('TEMPLATE_REPLACE_MODULE_CODE_CLASS_UPPER_UNINSTALL_TITLE'),
                     $this->MODULE_FOLDER . '/install/unstep1.php'
                 );
                 break;
@@ -106,7 +106,7 @@ class iny_core extends CModule
                 $this->unInstallDB();
 
                 $APPLICATION->includeAdminFile(
-                    Loc::getMessage('INY_CORE_UNINSTALL_TITLE'),
+                    Loc::getMessage('TEMPLATE_REPLACE_MODULE_CODE_CLASS_UPPER_UNINSTALL_TITLE'),
                     $this->MODULE_FOLDER . '/install/unstep2.php'
                 );
                 break;
@@ -160,7 +160,9 @@ class iny_core extends CModule
         global $APPLICATION;
 
         if (!check_bitrix_sessid() || !CurrentUser::get()->isAdmin()) {
-            $APPLICATION->throwException(Loc::getMessage('INY_CORE_MODULE_INSTALL_ERROR_PERMISSION'));
+            $APPLICATION->throwException(
+                Loc::getMessage('TEMPLATE_REPLACE_MODULE_CODE_CLASS_UPPER_MODULE_INSTALL_ERROR_PERMISSION')
+            );
         }
     }
 
@@ -173,7 +175,7 @@ class iny_core extends CModule
 
         if ($APPLICATION->getException()) {
             $APPLICATION->includeAdminFile(
-                Loc::getMessage('INY_CORE_MODULE_INSTALL_ERROR'),
+                Loc::getMessage('TEMPLATE_REPLACE_MODULE_CODE_CLASS_UPPER_MODULE_INSTALL_ERROR'),
                 $this->MODULE_FOLDER . '/install/error.php'
             );
         }
