@@ -5,16 +5,20 @@ namespace INY\Core\Trait;
 /**
  * Trait Singleton
  *
- * @package INY\Core\Trait
+ * @package Trait
  */
 trait Singleton
 {
+    /**
+     * @var Singleton|null
+     */
+
     protected static ?self $instance = null;
 
     /**
-     * @return self
+     * @return static
      */
-    final public function getInstance(): static
+    final public static function getInstance(): static
     {
         if (!static::$instance) {
             static::$instance = new static();
@@ -40,12 +44,12 @@ trait Singleton
     /**
      * @return void
      */
-    private function setContext(): void
+    private function initContext(): void
     {
     }
 
     final private function __construct()
     {
-        $this->setContext();
+        $this->initContext();
     }
 }

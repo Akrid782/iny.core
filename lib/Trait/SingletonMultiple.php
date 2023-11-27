@@ -5,18 +5,21 @@ namespace INY\Core\Trait;
 /**
  * Trait SingletonMultiple
  *
- * @package INY\Core\Trait
+ * @package Trait
  */
 trait SingletonMultiple
 {
-    protected static ?array $instance = null;
+    /**
+     * @var array<string|int, static>
+     */
+    protected static array $instance = [];
 
     /**
      * @param string|int $key
      *
-     * @return self
+     * @return static
      */
-    final public function getInstance(string|int $key): static
+    final public static function getInstance(string|int $key): static
     {
         if (!static::$instance[$key]) {
             static::$instance[$key] = new static();
@@ -28,7 +31,7 @@ trait SingletonMultiple
     /**
      * @return void
      */
-    final protected function __wakeup(): void
+    final public function __wakeup(): void
     {
     }
 
@@ -42,12 +45,12 @@ trait SingletonMultiple
     /**
      * @return void
      */
-    private function setContext(): void
+    private function initContext(): void
     {
     }
 
     final private function __construct()
     {
-        $this->setContext();
+        $this->initContext();
     }
 }

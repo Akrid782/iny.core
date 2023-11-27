@@ -2,13 +2,10 @@ name: "PHP_auto_test"
 
 on:
   push:
-    tags:
-      - '!refs/tags/*'
     branches:
       - '*'
-    paths:
-      - "**.php"
-      - ".github/workflows/phpcs.yml"
+    pull_request:
+      branches: [ "master" ]
 
 permissions:
   contents: read
@@ -50,3 +47,17 @@ jobs:
 
       - name: Run PHP_CodeSniffer
         run: composer test:phpcs
+  phpmd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          tools: phpmd
+
+      - name: Run PHPMD
+        run: phpmd ./ github phpmd.xml
