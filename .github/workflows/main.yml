@@ -1,29 +1,15 @@
-name: "PHP_auto_test"
+name: "Bitrix Module Core"
 
 on:
   push:
-    tags:
-      - '!refs/tags/*'
     branches:
       - '*'
-    paths:
-      - "**.php"
-      - ".github/workflows/phpcs.yml"
 
 permissions:
   contents: read
 
 jobs:
-  php-lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-        with:
-          fetch-depth: 0
-      - name: PHP Lint 8.1
-        uses: dbfx/github-phplint/8.1@master
-  phpcs:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -50,3 +36,6 @@ jobs:
 
       - name: Run PHP_CodeSniffer
         run: composer test:phpcs
+
+      - name: Run PHP-Lint
+        run: composer test:phplint
