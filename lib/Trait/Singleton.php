@@ -2,6 +2,8 @@
 
 namespace INY\Core\Trait;
 
+use Bitrix\Main\UserTable;
+
 /**
  * Trait Singleton
  *
@@ -14,6 +16,11 @@ trait Singleton
      */
 
     protected static ?self $instance = null;
+
+    final private function __construct()
+    {
+        $this->initContext();
+    }
 
     /**
      * @return static
@@ -30,7 +37,7 @@ trait Singleton
     /**
      * @return void
      */
-    final protected function __wakeup(): void
+    final public function __wakeup(): void
     {
     }
 
@@ -46,10 +53,5 @@ trait Singleton
      */
     private function initContext(): void
     {
-    }
-
-    final private function __construct()
-    {
-        $this->initContext();
     }
 }

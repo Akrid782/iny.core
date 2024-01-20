@@ -14,6 +14,11 @@ trait SingletonMultiple
      */
     protected static array $instance = [];
 
+    final private function __construct()
+    {
+        $this->initContext();
+    }
+
     /**
      * @param string|int $key
      *
@@ -47,10 +52,5 @@ trait SingletonMultiple
      */
     private function initContext(): void
     {
-    }
-
-    final private function __construct()
-    {
-        $this->initContext();
     }
 }
