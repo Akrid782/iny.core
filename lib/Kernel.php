@@ -2,9 +2,9 @@
 
 namespace INY\Core;
 
-use Bitrix\Main\Context;
 use Bitrix\Main\Application;
 use INY\Core\Trait\Singleton;
+use INY\Core\Engine\Environment;
 
 /**
  * class Kernel
@@ -15,37 +15,20 @@ class Kernel
 {
     use Singleton;
 
+    private readonly Environment $appEnvironment;
+
     private function initContext(): void
     {
-        if (!file_exists($this->getEnvFilePath())) {
-            return;
-        }
-
-        $env = Context::getCurrent()?->getEnvironment();
-        $env->set(
-            array_merge($env->getValues(), $this->getEnvValues())
+        $this->appEnvironment = new Environment(
+            Application::getDocumentRoot() . '/.env'
         );
-    }
-
-    private function getEnvFilePath(): string
-    {
-        return Application::getDocumentRoot() . '/.env';
-    }
-
-    private function getEnvValues(): array
-    {
-        return (array) parse_ini_file($this->getEnvFilePath(), true, INI_SCANNER_TYPED);
     }
 
     /**
-     * Получение текущего окружения
-     *
-     * @return EnumAppEnvironmentType
+     * @return Environment
      */
-    public function getAppEnvironmentType(): EnumAppEnvironmentType
+    public function getEnvironment(): Environment
     {
-        return EnumAppEnvironmentType::defineTypeAppEnvironmental(
-            Context::getCurrent()?->getEnvironment()->get('APP_ENV_TYPE')
-        );
+        return $this->appEnvironment;
     }
 }

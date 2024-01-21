@@ -1,13 +1,13 @@
 <?php
 
-namespace INY\Core;
+namespace INY\Core\Engine;
 
 /**
- * class EnumAppEnvironmentType
+ * class EnumEnvironmentType
  *
- * @package INY\Core
+ * @package INY\Core\Engine
  */
-enum EnumAppEnvironmentType: string
+enum EnumEnvironmentType: string
 {
     case LOCAL = 'local';
     case DEV = 'dev';
@@ -20,7 +20,7 @@ enum EnumAppEnvironmentType: string
      *
      * @return self
      */
-    public static function defineTypeAppEnvironmental(?string $type): self
+    public static function defineTypeEnvironmental(?string $type): self
     {
         return match ($type) {
             self::LOCAL->value => self::LOCAL,
