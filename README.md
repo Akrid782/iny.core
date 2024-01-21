@@ -1,6 +1,14 @@
 # Базовый модуль
 
+[![test](https://github.com/Akrid782/iny.core/actions/workflows/test.yml/badge.svg)](
+https://github.com/Akrid782/iny.core/actions/workflows/test.yml)
+
 Модуль предназначен для использования его на всех проектах как хранилище объектов для ускорения разработки на bitrix
+
+## Лицензия
+
+Плагин распространяется под лицензией MIT.
+Полные условия лицензии см. в разделе [Лицензия](LICENCE.md).
 
 ## Функционал
 
