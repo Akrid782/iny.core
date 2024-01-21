@@ -1,4 +1,4 @@
-name: "Bitrix Module Core"
+name: test
 
 on:
   push:
