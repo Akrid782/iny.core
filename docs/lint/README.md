@@ -56,7 +56,7 @@ PHPCS - это инструмент командной строки с откр�
 vendor/bin/phpcs --standard=./local/modules/iny.core/phpcs.xml --runtime-set testVersion 8.1 ./local/
  ```
 
-![Screenshot](/example_phpcs.png)
+![Screenshot](example_phpcs.png)
 
 ## PHPLint
 
@@ -73,4 +73,4 @@ PHPLint - это инструмент статического анализа к
 vendor/bin/phplint ./local/ --ansi --configuration=./local/modules/iny.core/.phplint.yml
  ```
 
-![Screenshot](/example_phplint.png)
+![Screenshot](example_phplint.png)
