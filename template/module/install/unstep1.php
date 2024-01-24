@@ -4,14 +4,13 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
-/**
- * @var CMain $APPLICATION
- */
-
+use Bitrix\Main\Application;
 use Bitrix\Main\Localization\Loc;
 
+$request = Application::getInstance()->getContext()->getRequest();
+
 ?>
-<form action="<?= $APPLICATION->getCurPage() ?>">
+<form action="<?= $request->getRequestedPage() ?>">
     <?= bitrix_sessid_post() ?>
     <input type="hidden" name="lang" value="<?= LANGUAGE_ID ?>">
     <input type="hidden" name="id" value="TEMPLATE_REPLACE_MODULE_CODE">
