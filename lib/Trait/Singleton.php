@@ -29,6 +29,14 @@ trait Singleton
     }
 
     /**
+     * @return bool
+     */
+    final public static function hasInstance(): bool
+    {
+        return isset(static::$instance);
+    }
+
+    /**
      * @return void
      */
     final public function __wakeup(): void

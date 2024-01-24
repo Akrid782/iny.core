@@ -35,12 +35,4 @@ class Kernel
     {
         return $this->appEnvironment;
     }
-
-    /**
-     * @return bool
-     */
-    public static function hasInstance(): bool
-    {
-        return isset(self::$instance);
-    }
 }
