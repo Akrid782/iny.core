@@ -22,13 +22,14 @@ class Server
     ) {
     }
 
+    /**
+     * @return Server|null
+     */
     public static function getCurrent(): ?Server
     {
-        if (Kernel::hasInstance()) {
-            return Kernel::getInstance()->getEnvironment()->getServer();
-        }
-
-        return null;
+        return Kernel::hasInstance()
+            ? Kernel::getInstance()->getEnvironment()->getServer()
+            : null;
     }
 
     /**
