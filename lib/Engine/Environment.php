@@ -12,8 +12,13 @@ use Bitrix\Main\Application;
  */
 class Environment
 {
+    /**
+     * @param string $envFilePath
+     * @param Server $server
+     */
     public function __construct(
-        private readonly string $envFilePath
+        private readonly string $envFilePath,
+        private readonly Server $server
     ) {
         $this->initEnvValues();
     }
@@ -41,22 +46,20 @@ class Environment
     }
 
     /**
-     * @return EnumEnvironmentType
+     * @return Server
      */
-    public function getEnvironmentType(): EnumEnvironmentType
+    public function getServer(): Server
     {
-        return EnumEnvironmentType::defineTypeEnvironmental(
-            (string) Context::getCurrent()?->getEnvironment()->get('APP_ENV_TYPE')
-        );
+        return $this->server;
     }
 
     /**
-     * @param EnumEnvironmentType $type
+     * @param string $variableName
      *
-     * @return bool
+     * @return string
      */
-    public function assertEnvironmentType(EnumEnvironmentType $type): bool
+    public function getEnvVariable(string $variableName): string
     {
-        return $this->getEnvironmentType() === $type;
+        return (string) Context::getCurrent()?->getEnvironment()->get($variableName);
     }
 }

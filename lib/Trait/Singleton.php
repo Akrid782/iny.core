@@ -2,8 +2,6 @@
 
 namespace INY\Core\Trait;
 
-use Bitrix\Main\UserTable;
-
 /**
  * Trait Singleton
  *
@@ -11,10 +9,6 @@ use Bitrix\Main\UserTable;
  */
 trait Singleton
 {
-    /**
-     * @var Singleton|null
-     */
-
     protected static ?self $instance = null;
 
     final private function __construct()

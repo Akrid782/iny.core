@@ -3,11 +3,11 @@
 namespace INY\Core\Engine;
 
 /**
- * class EnumEnvironmentType
+ * class EnumServerType
  *
  * @package INY\Core\Engine
  */
-enum EnumEnvironmentType: string
+enum EnumServerType: string
 {
     case LOCAL = 'local';
     case DEV = 'dev';
@@ -20,7 +20,7 @@ enum EnumEnvironmentType: string
      *
      * @return self
      */
-    public static function defineTypeEnvironmental(?string $type): self
+    public static function defineServerType(?string $type): self
     {
         return match ($type) {
             self::LOCAL->value => self::LOCAL,
@@ -29,5 +29,19 @@ enum EnumEnvironmentType: string
             self::PROD->value => self::PROD,
             default => self::UNDEFINED
         };
+    }
+
+    /**
+     * @return array<string, self>
+     */
+    public static function getServerTypes(): array
+    {
+        return [
+            self::LOCAL->value => self::LOCAL,
+            self::DEV->value => self::DEV,
+            self::STAGE->value => self::STAGE,
+            self::PROD->value => self::PROD,
+            self::UNDEFINED->value => self::UNDEFINED,
+        ];
     }
 }
