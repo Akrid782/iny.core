@@ -2,6 +2,7 @@
 
 namespace INY\Core;
 
+use INY\Core\Engine\Server;
 use Bitrix\Main\Application;
 use INY\Core\Trait\Singleton;
 use INY\Core\Engine\Environment;
@@ -19,8 +20,11 @@ class Kernel
 
     private function initContext(): void
     {
+        $pathEnv = Application::getDocumentRoot() . '/.env';
+
         $this->appEnvironment = new Environment(
-            Application::getDocumentRoot() . '/.env'
+            $pathEnv,
+            new Server($this)
         );
     }
 
