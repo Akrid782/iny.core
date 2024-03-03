@@ -22,7 +22,7 @@ enum EnumServerType: string
      */
     public static function defineServerType(?string $type): self
     {
-        return match ($type) {
+        return match (strtolower($type)) {
             self::LOCAL->value => self::LOCAL,
             self::DEV->value => self::DEV,
             self::STAGE->value => self::STAGE,

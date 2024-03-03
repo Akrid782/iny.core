@@ -10,7 +10,7 @@ use Bitrix\Main\Context;
  *
  * @package INY\Core\Engine
  */
-class Server
+final class Server
 {
     private const SERVER_TYPE = 'SERVER_TYPE';
 

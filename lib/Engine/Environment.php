@@ -10,7 +10,7 @@ use Bitrix\Main\Application;
  *
  * @package INY\Core\Engine
  */
-class Environment
+final class Environment
 {
     /**
      * @param string $envFilePath
@@ -25,7 +25,7 @@ class Environment
 
     private function initEnvValues(): void
     {
-        if (!$this->assertFileEnvExists()) {
+        if (!$this->isFileEnvExists()) {
             return;
         }
 
@@ -35,7 +35,7 @@ class Environment
         );
     }
 
-    private function assertFileEnvExists(): bool
+    private function isFileEnvExists(): bool
     {
         return file_exists($this->envFilePath);
     }
