@@ -8,8 +8,8 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Localization\Loc;
 
 $request = Application::getInstance()->getContext()->getRequest();
-
 ?>
+
 <form action="<?= $request->getRequestedPage() ?>">
     <?= bitrix_sessid_post() ?>
     <input type="hidden" name="lang" value="<?= LANGUAGE_ID ?>">

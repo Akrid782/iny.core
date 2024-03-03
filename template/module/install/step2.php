@@ -11,6 +11,7 @@ $request = Application::getInstance()->getContext()->getRequest();
 
 CAdminMessage::showNote(Loc::getMessage('MOD_INST_OK'));
 ?>
+
 <form action="<?= $request->getRequestedPage() ?>">
     <div>
         <input type="hidden" name="lang" value="<?= LANGUAGE_ID ?>">
