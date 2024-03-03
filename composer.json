@@ -42,9 +42,6 @@
     }
   },
   "autoload": {
-    "classmap": [
-      "../../../bitrix/modules/main/vendor"
-    ],
     "psr-4": {
       "INY\\Core\\": "lib"
     }
