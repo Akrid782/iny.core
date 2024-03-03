@@ -23,10 +23,10 @@
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
-    "squizlabs/php_codesniffer": "3.7.*",
-    "slevomat/coding-standard": "8.14.*",
+    "squizlabs/php_codesniffer": "*",
+    "slevomat/coding-standard": "*",
     "phpunit/phpunit": "10.2.*",
-    "overtrue/phplint": "9.0.*"
+    "overtrue/phplint": "*"
   },
   "extra": {
     "merge-plugin": {
@@ -42,6 +42,9 @@
     }
   },
   "autoload": {
+    "classmap": [
+      "../../../bitrix/modules/main/vendor"
+    ],
     "psr-4": {
       "INY\\Core\\": "lib"
     }

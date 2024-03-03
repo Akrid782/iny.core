@@ -61,7 +61,7 @@ class iny_core extends CModule
         $this->checkPermission();
         $this->showError();
 
-        switch ((int) $step) {
+        switch ($step) {
             case 0:
             case 1:
                 $APPLICATION->includeAdminFile(

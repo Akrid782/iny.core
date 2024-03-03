@@ -9,11 +9,14 @@ const NO_AGENT_STATISTIC = 'Y';
 const DisableEventsCheck = true;
 const NO_AGENT_CHECK = true;
 
+// phpcs:disable SlevomatCodingStandard.Variables.DisallowSuperGlobalVariable.DisallowedSuperGlobalVariable
 if (empty($_SERVER['DOCUMENT_ROOT'])) {
     $_SERVER['DOCUMENT_ROOT'] = dirname(__DIR__, 5);
 }
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/cli/bitrix.php';
+
+// phpcs:enable
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\Application;
@@ -44,7 +47,7 @@ spl_autoload_register(
             return;
         }
 
-        $path = $_SERVER['DOCUMENT_ROOT'];
+        $path = Application::getDocumentRoot();
         $pathList = explode('\\', $className);
         $module = mb_strtolower(
             implode('.', [
