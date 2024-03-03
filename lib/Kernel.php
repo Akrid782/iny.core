@@ -12,7 +12,7 @@ use INY\Core\Engine\Environment;
  *
  * @package INY\Core
  */
-class Kernel
+final class Kernel
 {
     use Singleton;
 
