@@ -1,6 +1,7 @@
 <?php
 
 use Bitrix\Main\Application;
+use Bitrix\Main\EventManager;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\ModuleManager;
 use Bitrix\Main\Localization\Loc;
@@ -16,6 +17,7 @@ if (class_exists('iny_core')) {
  */
 class iny_core extends CModule
 {
+    public const MIN_VERSION_PHP = 8.1;
     public $MODULE_ID = 'iny.core';
     public $MODULE_VERSION;
     public $MODULE_VERSION_DATE;
@@ -30,7 +32,7 @@ class iny_core extends CModule
     {
         $moduleVersion = [];
 
-        include __DIR__ . '/version.php';
+        include_once __DIR__ . '/version.php';
 
         $this->MODULE_VERSION = $moduleVersion['VERSION'];
         $this->MODULE_VERSION_DATE = $moduleVersion['VERSION_DATE'];
@@ -40,7 +42,7 @@ class iny_core extends CModule
         $this->PARTNER_NAME = Loc::getMessage('INY_CORE_PARTNER_NAME');
         $this->PARTNER_URI = Loc::getMessage('INY_CORE_PARTNER_URI');
 
-        $this->MODULE_FOLDER = dirname(__DIR__, 1);
+        $this->MODULE_FOLDER = dirname(__DIR__);
     }
 
     /**
@@ -48,18 +50,20 @@ class iny_core extends CModule
      */
     public function doInstall(): void
     {
-        global $APPLICATION, $step;
+        $this->validateModule();
 
-        if (PHP_VERSION < 8.1) {
-            $APPLICATION->throwException(
-                Loc::getMessage('INY_CORE_MODULE_INSTALL_ERROR_MINIMUM_VERSION_PHP', [
-                    '#VERSION#' => PHP_VERSION,
-                ])
-            );
+        if ($this->hasError() === false) {
+            $this->install();
+
+            return;
         }
 
-        $this->checkPermission();
         $this->showError();
+    }
+
+    private function install(): void
+    {
+        global $APPLICATION, $step;
 
         switch ($step) {
             case 0:
@@ -68,49 +72,33 @@ class iny_core extends CModule
                     Loc::getMessage('INY_CORE_INSTALL_TITLE'),
                     $this->MODULE_FOLDER . '/install/step1.php'
                 );
-                break;
+
+                return;
             case 2:
                 if ($this->installDB()) {
                     $this->installFiles();
+                    $this->installEvents();
                 }
 
                 $APPLICATION->includeAdminFile(
                     Loc::getMessage('INY_CORE_INSTALL_TITLE'),
                     $this->MODULE_FOLDER . '/install/step2.php'
                 );
-                break;
+
+                return;
+            default:
+                $APPLICATION->ThrowException(Loc::getMessage('INY_CORE_UNKNOWN_STEP'));
         }
     }
 
     /**
-     * @return void
-     * @throws ArgumentNullException
+     * @return bool
      */
-    public function doUninstall(): void
+    public function installDB(): bool
     {
-        global $APPLICATION, $step;
+        ModuleManager::registerModule($this->MODULE_ID);
 
-        $this->checkPermission();
-        $this->showError();
-
-        switch ((int) $step) {
-            case 0:
-            case 1:
-                $APPLICATION->includeAdminFile(
-                    Loc::getMessage('INY_CORE_UNINSTALL_TITLE'),
-                    $this->MODULE_FOLDER . '/install/unstep1.php'
-                );
-                break;
-            case 2:
-                $this->unInstallFiles();
-                $this->unInstallDB();
-
-                $APPLICATION->includeAdminFile(
-                    Loc::getMessage('INY_CORE_UNINSTALL_TITLE'),
-                    $this->MODULE_FOLDER . '/install/unstep2.php'
-                );
-                break;
-        }
+        return true;
     }
 
     /**
@@ -123,18 +111,80 @@ class iny_core extends CModule
     /**
      * @return void
      */
-    public function unInstallFiles(): void
+    public function installEvents(): void
     {
+        $eventManager = EventManager::getInstance();
+        foreach ($this->getEvents() as $event) {
+            $eventManager->registerEventHandler(...$event);
+        }
     }
 
     /**
-     * @return bool
+     * @return void
+     * @throws ArgumentNullException
      */
-    public function installDB(): bool
+    public function doUnInstall(): void
     {
-        ModuleManager::registerModule($this->MODULE_ID);
+        $this->validateModule();
 
-        return true;
+        if ($this->hasError() === false) {
+            $this->unInstall();
+
+            return;
+        }
+
+        $this->showError();
+    }
+
+    /**
+     * @return void
+     * @throws ArgumentNullException
+     */
+    private function unInstall(): void
+    {
+        global $APPLICATION, $step;
+
+        switch ($step) {
+            case 0:
+            case 1:
+                $APPLICATION->includeAdminFile(
+                    Loc::getMessage('INY_CORE_UNINSTALL_TITLE'),
+                    $this->MODULE_FOLDER . '/install/unstep1.php'
+                );
+
+                return;
+            case 2:
+                $this->unInstallEvents();
+                $this->unInstallFiles();
+                $this->unInstallDB();
+
+                $APPLICATION->includeAdminFile(
+                    Loc::getMessage('INY_CORE_UNINSTALL_TITLE'),
+                    $this->MODULE_FOLDER . '/install/unstep2.php'
+                );
+
+                return;
+            default:
+                $APPLICATION->ThrowException(Loc::getMessage('INY_CORE_UNKNOWN_STEP'));
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function unInstallEvents(): void
+    {
+        $eventManager = EventManager::getInstance();
+        foreach ($this->getEvents() as $event) {
+            $eventManager->unRegisterEventHandler(...$event);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function unInstallFiles(): void
+    {
     }
 
     /**
@@ -153,15 +203,50 @@ class iny_core extends CModule
     }
 
     /**
+     * @return array
+     */
+    private function getEvents(): array
+    {
+        return [];
+    }
+
+    /**
      * @return void
      */
-    private function checkPermission(): void
+    private function validateModule(): void
     {
         global $APPLICATION;
 
-        if (!check_bitrix_sessid() || !CurrentUser::get()->isAdmin()) {
+        if ($this->validateVersionPHP() === false) {
+            $APPLICATION->throwException(
+                Loc::getMessage('INY_CORE_MODULE_INSTALL_ERROR_MINIMUM_VERSION_PHP', [
+                    '#MIN_VERSION#' => self::MIN_VERSION_PHP,
+                    '#VERSION#' => PHP_VERSION,
+                ])
+            );
+
+            return;
+        }
+
+        if ($this->validatePermission() === false) {
             $APPLICATION->throwException(Loc::getMessage('INY_CORE_MODULE_INSTALL_ERROR_PERMISSION'));
         }
+    }
+
+    /**
+     * @return bool
+     */
+    private function validateVersionPHP(): bool
+    {
+        return PHP_VERSION >= self::MIN_VERSION_PHP;
+    }
+
+    /**
+     * @return bool
+     */
+    private function validatePermission(): bool
+    {
+        return check_bitrix_sessid() && CurrentUser::get()->isAdmin();
     }
 
     /**
@@ -171,11 +256,21 @@ class iny_core extends CModule
     {
         global $APPLICATION;
 
-        if ($APPLICATION->getException()) {
+        if ($this->hasError()) {
             $APPLICATION->includeAdminFile(
                 Loc::getMessage('INY_CORE_MODULE_INSTALL_ERROR'),
                 $this->MODULE_FOLDER . '/install/error.php'
             );
         }
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasError(): bool
+    {
+        global $APPLICATION;
+
+        return (bool) $APPLICATION->getException();
     }
 }
