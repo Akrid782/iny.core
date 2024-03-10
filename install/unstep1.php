@@ -8,14 +8,14 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Localization\Loc;
 
 $request = Application::getInstance()->getContext()->getRequest();
-
 ?>
+
 <form action="<?= $request->getRequestedPage() ?>">
     <?= bitrix_sessid_post() ?>
-    <input type="hidden" name="lang" value="<?= LANGUAGE_ID ?>">
-    <input type="hidden" name="id" value="iny.core">
-    <input type="hidden" name="uninstall" value="Y">
-    <input type="hidden" name="step" value="2">
+    <input type="hidden" tabindex="-1" aria-hidden="true" name="lang" value="<?= LANGUAGE_ID ?>">
+    <input type="hidden" tabindex="-1" aria-hidden="true" name="id" value="iny.core">
+    <input type="hidden" tabindex="-1" aria-hidden="true" name="uninstall" value="Y">
+    <input type="hidden" tabindex="-1" aria-hidden="true" name="step" value="2">
     <?php
     CAdminMessage::showMessage(Loc::getMessage('MOD_UNINST_WARN'))
     ?>

@@ -25,6 +25,6 @@ if ($exception = $APPLICATION->getException()) {
 
 <form action="<?= $request->getRequestedPage() ?>" name="form1" method="post">
     <?= bitrix_sessid_post() ?>
-    <input type="hidden" name="lang" value="<?= LANG ?>" />
+    <input type="hidden" tabindex="-1" aria-hidden="true" name="lang" value="<?= LANG ?>" />
     <input type="submit" name="" value="<?= Loc::getMessage('MOD_BACK') ?>" />
 </form>
