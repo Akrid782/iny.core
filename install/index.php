@@ -48,7 +48,7 @@ class iny_core extends CModule
     /**
      * @return void
      */
-    public function doInstall(): void
+    public function DoInstall(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->validateModule();
 
@@ -94,7 +94,7 @@ class iny_core extends CModule
     /**
      * @return bool
      */
-    public function installDB(): bool
+    public function InstallDB(): bool // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         ModuleManager::registerModule($this->MODULE_ID);
 
@@ -104,14 +104,14 @@ class iny_core extends CModule
     /**
      * @return void
      */
-    public function installFiles(): void
+    public function InstallFiles(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
     }
 
     /**
      * @return void
      */
-    public function installEvents(): void
+    public function InstallEvents(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $eventManager = EventManager::getInstance();
         foreach ($this->getEvents() as $event) {
@@ -123,7 +123,7 @@ class iny_core extends CModule
      * @return void
      * @throws ArgumentNullException
      */
-    public function doUnInstall(): void
+    public function DoUnInstall(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->validateModule();
 
@@ -172,7 +172,7 @@ class iny_core extends CModule
     /**
      * @return void
      */
-    public function unInstallEvents(): void
+    public function UnInstallEvents(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $eventManager = EventManager::getInstance();
         foreach ($this->getEvents() as $event) {
@@ -183,7 +183,7 @@ class iny_core extends CModule
     /**
      * @return void
      */
-    public function unInstallFiles(): void
+    public function UnInstallFiles(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
     }
 
@@ -191,7 +191,7 @@ class iny_core extends CModule
      * @return void
      * @throws ArgumentNullException
      */
-    public function unInstallDB(): void
+    public function UnInstallDB(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $postList = Application::getInstance()->getContext()->getRequest()->toArray();
 
