@@ -6,20 +6,20 @@
          failOnWarning="true"
          colors="true"
          failOnEmptyTestSuite="true"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.2/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
          cacheDirectory=".phpunit.cache"
          beStrictAboutCoverageMetadata="true">
     <coverage/>
     <testsuites>
         <testsuite name="INYCore">
-            <directory suffix="Test.php">
+            <directory>
                 local/modules/
             </directory>
         </testsuite>
     </testsuites>
     <source>
         <include>
-            <directory suffix=".php">
+            <directory>
                 local
             </directory>
         </include>

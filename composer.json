@@ -23,10 +23,10 @@
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
-    "squizlabs/php_codesniffer": "*",
-    "slevomat/coding-standard": "*",
-    "phpunit/phpunit": "10.2.*",
-    "overtrue/phplint": "*"
+    "squizlabs/php_codesniffer": "^3.9.0",
+    "slevomat/coding-standard": "^8.15.0",
+    "phpunit/phpunit": "10.5.13",
+    "overtrue/phplint": "^9.1.2"
   },
   "extra": {
     "merge-plugin": {
