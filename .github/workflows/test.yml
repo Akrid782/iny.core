@@ -31,6 +31,9 @@ jobs:
       - name: remove bitrix merge-plugin
         run: composer config --unset extra.merge-plugin
 
+      - name: remove bitrix merge-plugin
+        run: composer config --unset autoload.classmap
+
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 

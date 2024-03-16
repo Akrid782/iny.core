@@ -47,6 +47,9 @@
     }
   },
   "autoload-dev": {
+    "classmap": [
+      "../../../bitrix/modules/main/vendor/*"
+    ],
     "psr-4": {
       "INY\\Core\\Test\\PHPUnit\\": "test/PHPUnit"
     }

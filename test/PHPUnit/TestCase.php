@@ -3,7 +3,6 @@
 namespace INY\Core\Test\PHPUnit;
 
 use ReflectionClass;
-use PHPUnit\Framework;
 use ReflectionException;
 use Bitrix\Main\Application;
 use Bitrix\Main\DB\SqlQueryException;
@@ -13,7 +12,7 @@ use Bitrix\Main\DB\SqlQueryException;
  *
  * @package PHPUnit;
  */
-class TestCase extends Framework\TestCase
+class TestCase extends \PHPUnit\Framework\TestCase
 {
     protected static bool $useTransaction = true;
 
@@ -77,9 +76,7 @@ class TestCase extends Framework\TestCase
     protected function runProtectedMethod(object|string $class, string $methodName, array $args = []): mixed
     {
         $reflectClass = new ReflectionClass($class::class);
-        $method = $reflectClass->getMethod($methodName);
-        $method->setAccessible(true);
 
-        return $method->invokeArgs($class, [...$args]);
+        return $reflectClass->getMethod($methodName)->invokeArgs($class, [...$args]);
     }
 }

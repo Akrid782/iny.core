@@ -1,8 +1,8 @@
 jobs: 10
 extensions:
-  - php
+    - php
 exclude:
-  - vendor
+    - vendor
 warning: true
 memory-limit: -1
 no-cache: true

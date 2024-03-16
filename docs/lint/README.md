@@ -4,23 +4,23 @@
 
 ```json
 {
-  "scripts": {
-  },
-  "require": {
-    "wikimedia/composer-merge-plugin": "dev-master"
-  },
-  "extra": {
-    "merge-plugin": {
-      "require": [
-        "./local/modules/iny.core/composer.json"
-      ]
+    "scripts": {
+    },
+    "require": {
+        "wikimedia/composer-merge-plugin": "dev-master"
+    },
+    "extra": {
+        "merge-plugin": {
+            "require": [
+                "./local/modules/iny.core/composer.json"
+            ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "wikimedia/composer-merge-plugin": true
+        }
     }
-  },
-  "config": {
-    "allow-plugins": {
-      "wikimedia/composer-merge-plugin": true
-    }
-  }
 }
 ```
 
@@ -28,16 +28,16 @@
 
 ```json
 {
-  ...
-  "scripts": {
-    "test:all": [
-      "@test:phplint",
-      "@test:phpcs"
-    ],
-    "test:phplint": "vendor/bin/phplint ./local/ --ansi --configuration=./local/modules/iny.core/.phplint.yml",
-    "test:phpcs": "vendor/bin/phpcs --standard=./local/modules/iny.core/phpcs.xml --runtime-set testVersion 8.1 ./local/"
-  },
-  ...
+    ...
+    "scripts": {
+        "test:all": [
+            "@test:phplint",
+            "@test:phpcs"
+        ],
+        "test:phplint": "vendor/bin/phplint ./local/ --ansi --configuration=./local/modules/iny.core/.phplint.yml",
+        "test:phpcs": "vendor/bin/phpcs --standard=./local/modules/iny.core/phpcs.xml --runtime-set testVersion 8.1 ./local/"
+    },
+    ...
 }
 ```
 
