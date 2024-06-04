@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="PHP_CodeSniffer">
-    <description>PHP_CodeSniffer configuration</description>
+<ruleset name="INY">
+    <description>PHP_CodeSniffer INY configuration</description>
     <arg name="colors"/>
     <arg value="p"/>
     <arg value="s"/>
@@ -10,6 +10,7 @@
 
     <rule ref="PSR12"/>
 
+    <config name="testVersion" value="8.1"/>
     <config name="installed_paths" value="vendor/slevomat/coding-standard"/>
 
     <!--
@@ -17,15 +18,14 @@
 
     Пример:
     # Плохо
-    $value = ($condition) ? $result1 : $result2;
-    if ($condition) {
-        $value = $result1;
-    } else {
-        $value = $result2;
-    }
+    $isEnabled = ($value === true) ? true : false;
+    # Плохо
+    $message = isset($error) ? $error : 'Нет ошибок';
 
     # Хорошо
-    $value = ($condition) ? $result1 : $result2;
+    $isEnabled = $value === true;
+    # Хорошо
+    $message = $error ?? 'Нет ошибок';
     -->
     <rule ref="SlevomatCodingStandard.ControlStructures.UselessTernaryOperator"/>
 
@@ -33,70 +33,40 @@
     Обнаруживает лишние условия if с последующим оператором return.
 
     Пример:
-    # Хорошо
-    function myFunction($value) {
-        if ($value === null) {
-            return;
+    # Плохо
+    function isEven(int $number): bool
+    {
+        if ($number % 2 === 0) {
+            return true;
+        } else {
+            return false;
         }
-
-        // код, выполняемый, если $value не равно null
     }
 
-    # Плохо
-    function myFunction($value) {
-        if ($value === null) {
-            return;
-        } else {
-            // код, выполняемый, если $value не равно null
-            return;
-        }
+    # Хорошо
+    function isEven(int $number): bool
+    {
+        return $number % 2 === 0;
     }
     -->
     <rule ref="SlevomatCodingStandard.ControlStructures.UselessIfConditionWithReturn"/>
 
     <!--
-    В PHP 7.1+ можно объявлять видимость констант класса. Подобно необязательному объявлению видимости для свойств и
-    методов, которое фактически требуется в нормальных стандартах кодирования, этот фрагмент также требует объявления
-    видимости для всех констант класса.
-
-    Пример:
-    const FOO = 1; // visibility missing!
-    public const BAR = 2; // correct
-    -->
-    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility"/>
-
-    <!--
-    Обеспечивает использование сокращенных вариантов скалярных подсказок в phpDocs:
-    int вместо integer и bool вместо boolean. Это сделано для обеспечения совместимости с собственными скалярными
-    подсказками, которые также допускают только сокращенные варианты.
-
-    Пример:
-    /**
-     * @param array $s
-     * @param integer $bn // ERROR Expected "int" but found "integer" in @param annotation.
-     *
-     * @return array
-     */
-
-    /**
-     * @param array $s
-     * @param int $bn
-     *
-     * @return array
-     */
-    -->
-    <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
-
-    <!--
     Проверяет, присутствует ли символ "?" перед каждым и необязательным
-    параметром (которые помечены как = null)
+    параметром (которые помечены как = null).
 
     Пример:
-    function get(
-        int $foo = null, // ERROR Parameter $foo has null default value, but is not marked as nullable.
-        ?int $bar = null
-    ) {
-        ....
+    # Плохо
+    // Error: Parameter $name has null default value, but is not marked as nullable.
+    function greet(string $name = null): string
+    {
+        return $name ? "Привет, $name!" : 'Привет!';
+    }
+
+    # Хорошо
+    function greet(?string $name = null)
+    {
+        return $name ? "Привет, $name!" : 'Привет!';
     }
     -->
     <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/>
@@ -105,9 +75,12 @@
     Проверяет наличие одного пробела между подсказкой и именем параметра:Foo $foo
     Проверяет, нет ли пробелов между символом, допускающим значение NULL, и подсказкой:?Foo
 
-    Пример:
-    1. public function myFunction(string$param1, int$param2): void // ERROR
-    1. public function myFunction(string  $param1, int  $param2): void // ERROR
+    Примеры:
+    1. public function greet(string$param1, int$param2): void // ERROR
+    2. public function greet(string  $param1, int  $param2): void // ERROR
+    3. public function greet(string $param1, int $param2): void // OK
+    4. public function greet(): ? string // ERROR
+    5. public function greet(): ?string // OK
     -->
     <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHintSpacing"/>
 
@@ -122,65 +95,44 @@
     <rule ref="SlevomatCodingStandard.Variables.DisallowVariableVariable"/>
 
     <!--
-    Ищет не используемые переменные
+    Ищет неиспользуемые переменные
 
     Пример:
-    function get() {
+    function get(): int
+    {
         $result = 1; // ERROR Unused variable $varName
 
         return 1;
     }
     -->
     <rule ref="SlevomatCodingStandard.Variables.UnusedVariable">
+        <!-- Исключение из-за особенностей файлов в bitrix -->
         <exclude-pattern>install/version.php</exclude-pattern>
     </rule>
 
     <!--
-    Запрещает использование свободных операторов ==и !=операторов сравнения. Вместо этого используйте === или !==,
+    Запрещает использование свободных операторов сравнения == и != . Вместо этого используйте === или !==,
     они гораздо более безопасны и предсказуемые.
 
     Пример:
-    if($a == $b) ERROR [x] Operator == is disallowed, use === instead
-    -->
-    <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators"/>
-
-    <!--
-    Запрещает использование синтаксиса подсказки типа массива (например int[], , bool[][])
-    в phpDocs в пользу синтаксиса подсказки общего типа (например, array<int>, array<array<bool>>).
-    -->
-    <rule ref="SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax"/>
-
-    <!--
-    Обеспечивает единообразное форматирование возвращаемых типовых указаний.
-
-    Пример:
-    function foo(): ?int
-    -->
-    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing"/>
-
-    <!--
-    Запрещено использовать обратную косую черту в операторе use.
-
-    Пример:
-
     # Плохо
-    use \Foo\Bar;
+    1. if ($a == $b) // ERROR [x] Operator == is disallowed, use === instead
 
     # Хорошо
-    use Foo\Bar;
+    2. if ($a === $b)
     -->
-    <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash"/>
+    <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators"/>
 
     <!--
     Тернарный оператор необходимо переформатировать, если оператор не возглавляет строку.
 
     Привет:
-    # плохо
+    # Плохо
     $t = $someCondition ?
         $thenThis :
         $otherwiseThis;
 
-    # хорошо
+    # Хорошо
     $t = $someCondition
         ? $thenThis
         : $otherwiseThis;
@@ -191,88 +143,135 @@
     Если это возможно, требуется короткий тернарный оператор ?:
 
     Пример:
-    # плохо
+    # Плохо
     $var = $a ? $a : 45
 
-    # хорошо
+    # Хорошо
     $var = $a ?: 45
     -->
     <rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator"/>
 
     <!--
-    Обеспечивает максимальную когнитивную сложность функций.
-
-    Sniff предоставляет следующие настройки:
-        - warningThreshold: по умолчанию 6
-        - errorThreshold: по умолчанию 6
+    Обеспечивает максимальную когнитивную сложность функций. По умолчанию максимальная когнитивная сложность 5.
     -->
     <rule ref="SlevomatCodingStandard.Complexity.Cognitive"/>
-
-    <!--Документация методов -->
-    <rule ref="Squiz.Commenting.FunctionComment">
-        <properties>
-            <!--Должно пропускать ошибку наследованной документации -->
-            <property name="skipIfInheritdoc" value="true"/>
-
-            <!--Включена проверка только у public и protected методов -->
-            <property name="minimumVisibility" value="protected"/>
-        </properties>
-
-        <!-- Отключена проверка описания метода -->
-        <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
-
-        <!-- Отключена проверка на не понятная что, но она мешает когда в phpdoc все хорошо -->
-        <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamType"/>
-        <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
-        <exclude name="Squiz.Commenting.FunctionComment.EmptyThrows"/>
-
-        <!-- Данная настройка заменена на SlevomatCodingStandard.TypeHints.LongTypeHints -->
-        <exclude name="Squiz.Commenting.FunctionComment.IncorrectParamVarName"/>
-
-        <exclude name="Squiz.Commenting.FunctionComment.InvalidReturn"/>
-
-        <!-- Исключение для магических методов -->
-        <exclude name="Squiz.Commenting.FunctionComment.Missing">
-            <message>Missing doc comment for function</message>
-            <source>.*__.*</source>
-        </exclude>
-    </rule>
 
     <!-- Проверка на логические операторы "and" и "or", например if (1 and 2) плохо, а if (1 && 2) хорошо  -->
     <rule ref="Squiz.Operators.ValidLogicalOperators"/>
 
-    <!-- Проверка на присутствие мертвого кода  -->
+    <!--
+    Проверка на присутствие мертвого кода.
+
+    Пример:
+    # Плохо
+    function myFunction(): bool
+    {
+        echo 'Этот код выполнится.';
+
+        return true;
+        echo 'Этот код никогда не выполнится.'; // Нарушение!
+    }
+
+    # Плохо
+    foreach ($items as $item) {
+        if ($item === 'apple') {
+            echo 'Нашли яблоко!';
+            break;
+            echo 'Этот код никогда не выполнится.'; // Нарушение!
+        }
+    }
+
+    # Плохо
+    switch ($value) {
+        case 1:
+            echo 'Один';
+        case 2:
+            echo 'Два'; // Нарушение! Этот код выполнится, если $value равен 1 или 2
+            break;
+    }
+
+    # Хорошо
+    function myFunction(): bool
+    {
+        echo 'Этот код выполнится.';
+
+        return true;
+    }
+
+    # Хорошо
+    foreach ($items as $item) {
+        if ($item === 'apple') {
+            echo 'Нашли яблоко!';
+            break;
+        }
+    }
+
+    # Хорошо
+    switch ($value) {
+        case 1:
+            echo 'Один';
+            break; // break предотвращает выполнение следующего case
+        case 2:
+            echo 'Два';
+            break;
+    }
+    -->
     <rule ref="Squiz.PHP.NonExecutableCode"/>
 
-    <!-- Проверка на применение $this в статических методах  -->
+    <!--
+    Проверка на применение $this в статических методах.
+
+    Пример:
+    class MyClass
+    {
+        private string $myProperty;
+
+        public static function myStaticMethod()
+        {
+            // ERROR Usage of "$this" in static methods will cause runtime errors (Squiz.Scope.StaticThisUsage.Found)
+            echo $this->myProperty; // Нарушение! $this недоступен в статических методах
+        }
+    }
+    -->
     <rule ref="Squiz.Scope.StaticThisUsage"/>
 
-    <!-- Проверка на двойные кавычки, пример "example" нельзя, а "example {$param}" и 'example' можно  -->
+    <!--
+    Проверка на двойные кавычки.
+
+    Пример:
+    # Плохо
+    $message = "Привет!"; // Нарушение! Двойные кавычки не нужны.
+
+    # Хорошо
+    $message = 'Привет!';
+
+    # Хорошо
+    $name = 'Иван';
+    $message = "Привет, $name!"; // Двойные кавычки нужны для интерполяции переменной.
+    -->
     <rule ref="Squiz.Strings.DoubleQuoteUsage.NotRequired"/>
 
     <!--
-        Проверка на пробел после приведение типов
+    Проверка на пробел после приведение типов.
 
-        Пример:
+    Пример:
+    # Плохо
+    $fuga = (int)'123'; // Expected 1 space(s) after cast statement; 0 found
 
-        # Хорошо
-        $hoge = (int) '123';
-
-        # Плохо
-        $fuga = (int)'123'; // Expected 1 space(s) after cast statement; 0 found
+    # Хорошо
+    $hoge = (int) '123';
     -->
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
 
     <!--
-        Проверяет интервал после оператора !
+    Проверяет интервал после оператора !
 
-        Пример:
+    Пример:
+    # Плохо
+    $hoge = ! true; // Expected 1 space(s) after NOT operator; 0 found
 
-        # Плохо
-        $hoge = ! true; // Expected 1 space(s) after NOT operator; 0 found
-
-        # Хорошо
-        $fuga = !true;
+    # Хорошо
+    $fuga = !true;
     -->
     <rule ref="Generic.Formatting.SpaceAfterNot">
         <properties>
@@ -280,7 +279,23 @@
         </properties>
     </rule>
 
-    <!-- Проверка, что нет пустой строки после открывающей фигурной скобки метода -->
+    <!--
+    Проверка, что нет пустой строки после открывающей фигурной скобки метода.
+
+    Пример:
+    # Плохо
+    function myFunction()
+    {
+
+        // Реализация кода
+    }
+
+    # Хорошо
+    function myFunction()
+    {
+        // Реализация кода
+    }
+    -->
     <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
 
     <!-- Проверка на присутствие пустых строк до и после метода -->
@@ -292,13 +307,36 @@
         </properties>
     </rule>
 
-    <!-- Проверяет что все языковые конструкции содержат один пробел между ними и их содержимым  -->
-    <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing"/>
+    <!--
+    Проверяет наличие пробелов вокруг логических операторов.
 
-    <!-- Проверяет наличие пробелов вокруг логических операторов -->
+    Пример:
+    # Плохо
+    if ($condition1&&$condition2) {
+        // код
+    }
+
+    # Хорошо
+    if ($condition1 && $condition2) {
+        // код
+    }
+    -->
     <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
 
-    <!-- Проверка, что перед оператором объекта и после него нет пробелов -->
+    <!--
+    Проверка, что перед оператором объекта и после него нет пробелов.
+
+    Пример:
+    # Плохо
+    $object -> method();
+
+    # Хорошо
+    $object->method();
+
+    # Хорошо
+    $object->method()
+        ->method();
+    -->
     <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">
         <properties>
             <property name="ignoreNewlines" value="true"/>
@@ -319,225 +357,310 @@
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
 
     <!--
-        Проверяет, что элементы массива имеют отступ в 4 пробел
+    Проверяет, что элементы массива имеют отступ в 4 пробел.
 
-        Пример:
-        $array = [
-            'ok',
-          'ng', // Array key not indented correctly; expected 4 spaces but found 2
-        ];
+    Пример:
+    $array = [
+        'ok',
+      'ng', // Array key not indented correctly; expected 4 spaces but found 2
+    ];
     -->
     <rule ref="Generic.Arrays.ArrayIndent"/>
 
     <!--
-        Запрещает синтаксис длинного массива.
+    Запрещает синтаксис длинного массива.
 
-        Пример:
-        $ok = [];
-        $ng = array(); // Short array syntax must be used to define arrays
+    Пример:
+    $ok = [];
+    $ng = array(); // Short array syntax must be used to define arrays
     -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 
     <!--
-        Проверяет наличие пустых операторов PHP.
+    Проверяет наличие пустых операторов PHP.
 
-        * Две точки с запятой без исполняемого кода между ними
-        * Пустая комбинация тегов открытия-закрытия PHP
+    * Две точки с запятой без исполняемого кода между ними
+    * Пустая комбинация тегов открытия-закрытия PHP
 
-        Пример:
-        <?php
-        ; // Empty PHP statement detected: superfluous semi-colon.
-        ?>
+    Пример:
+    <?php
+    ; // Empty PHP statement detected: superfluous semi-colon.
+    ?>
 
-        <?php ?> // Empty PHP open/close tag combination detected.
+    <?php ?> // Empty PHP open/close tag combination detected.
     -->
     <rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>
 
     <!--
-        Обнаружение пустых утверждений. (try, catch, finally, do, else, elseif, for, foreach, if, switch, while)
-        Также считается пустым, если полностью пустой или просто пустая строка или комментарий.
+    Обнаружение пустых утверждений. (try, catch, finally, do, else, elseif, for, foreach, if, switch, while)
+    Также считается пустым, если полностью пустой или просто пустая строка или комментарий.
 
-        Пример:
-        if (true) { // Empty IF statement detected
-            // empty
-        }
+    Пример:
+    if (true) { // Empty IF statement detected
+        // empty
+    }
     -->
     <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
 
     <!--
-        Обнаружение безусловных операторов if и elseif.
-        Обнаружены условия, в которых установлены только истина или ложь.
+    Обнаружение безусловных операторов if и elseif.
+    Обнаружены условия, в которых установлены только истина или ложь.
 
-        Пример:
-        if (true) { // Avoid IF statements that are always true or false
-            echo 'Hello';
-        }
+    Пример:
+    if (true) { // Avoid IF statements that are always true or false
+        echo 'Hello';
+    }
     -->
     <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
 
     <!--
-        Обнаружение неиспользуемых параметров функции.
-        Однако это не будет обнаружено, если содержимое функции пусто или содержит только комментарии.
+    Обнаружение неиспользуемых параметров функции.
+    Однако это не будет обнаружено, если содержимое функции пусто или содержит только комментарии.
 
-        Пример:
-        function hoge($hoge) { // The method parameter $hoge is never used
-            echo 'Hello';
-        }
+    Пример:
+    # Плохо - не используется $param2
+    function exampleFunction(int $param1, int $param2): int
+    {
+        return $param1;
+    }
 
-        function fuga($fuga) {
-        }
+    # Хорошо
+    function exampleFunction1(int $param1, int $param2): int
+    {
+        return $param1 + $param2;
+    }
+
+    # Не будет обнаружено ошибки с пустым телом функции
+    function exampleFunction2(int $param1, int $param2): int
+    {
+        // описание
+    }
     -->
     <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
 
     <!--
-        Обнаруживает ненужные переопределенные методы, которые просто вызывают родителя.
+    Обнаруживает ненужные переопределенные методы, которые просто вызывают родителя.
 
-        Пример:
-        class Hoge
+    Пример:
+    # Плохо
+    class Example extends \Bitrix\Main\UserTable
+    {
+        public static function getMap(): array // Possible useless method overriding detected
         {
-            public function __construct()
-            {
-                echo 'Hello';
-            }
+            return parent::getMap();
         }
+    }
 
-        class Fuga extends Hoge
+    # Хорошо
+    class Example extends \Bitrix\Main\UserTable
+    {
+        public static function getMap(): array // Possible useless method overriding detected
         {
-            public function __construct() // Possible useless method overriding detected
-            {
-                parent::__construct();
-            }
+            $map = parent::getMap();
+            $map[] = new \Bitrix\Main\ORM\Fields\StringField('TEST_FIELD');
+
+            return $map;
         }
+    }
     -->
     <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
 
-
     <!--
-        Убедитесь, что ваши блоки документов соответствуют базовому форматированию.
+    Запрещает использование условных выражений Йоды.
 
-        Пример:
-        /** */
+    Пример:
+    # Плохо
+    if (100 === $value) { // Usage of Yoda conditions is not allowed; switch the expression order
+    }
 
-        /** example
-         */
-    -->
-    <rule ref="Generic.Commenting.DocComment">
-        <exclude name="Generic.Commenting.DocComment.MissingShort"/>
-        <exclude name="Generic.Commenting.DocComment.ShortNotCapital"/>
-    </rule>
-
-    <!--
-        Запрещает использование условных выражений Йоды.
-
-        Пример:
-        $value = 10;
-
-        if (100 === $value) { // Usage of Yoda conditions is not allowed; switch the　expression order
-        }
+    # Хорошо
+    if ($value === 100) {
+    }
     -->
     <rule ref="Generic.ControlStructures.DisallowYodaConditions"/>
 
     <!--
-        Запрещает использовать устаревшие функции
+    Запрещает использовать устаревшие функции.
 
-        Пример:
-        mbsplit('\s', 'hello world'); // Function mbsplit() has been deprecated
+    Пример:
+    # Плохо
+    $timestamp = date_sunset(time()); // ERROR Function date_sunset() has been deprecated
+
+    # Хорошо
+    $timestamp = date_sun_info(time(), 0, 0);
     -->
     <rule ref="Generic.PHP.DeprecatedFunctions"/>
 
     <!--
-         Запрещает использовать суперглобальные переменные
+    Запрещает использовать суперглобальные переменные.
 
-        Пример:
-        var_dump($_REQUEST); // The $_REQUEST superglobal should not be used; use $_GET, $_POST, or $_COOKIE instead
+    Пример:
+    var_dump($_REQUEST); // ERROR Use of super global variable is disallowed.
+    var_dump($_POST); // ERROR Use of super global variable is disallowed.
+    var_dump($_GET); // ERROR Use of super global variable is disallowed.
+    var_dump($_COOKIE); // ERROR Use of super global variable is disallowed.
     -->
-    <rule ref="Generic.PHP.DisallowRequestSuperglobal"/>
     <rule ref="SlevomatCodingStandard.Variables.DisallowSuperGlobalVariable"/>
 
     <!-- Запрещает использовать конструкцию goto -->
     <rule ref="Generic.PHP.DiscourageGoto"/>
 
     <!--
-        Запрещает использовать префикс @ для подавления ошибок
+    Запрещает использовать префикс @ для подавления ошибок.
 
-        Пример:
-        @fopen('hoge.txt', 'r'); // Silencing errors is discouraged; found: @fopen('hoge.txt'...
+    Пример:
+    # Плохо
+    @fopen('hoge.txt', 'r'); // Silencing errors is discouraged; found: @fopen('hoge.txt'...
+
+    # Хорошо
+    fopen('hoge.txt', 'r');
     -->
     <rule ref="Generic.PHP.NoSilencedErrors"/>
 
     <!--
-        Проверка на наличие лишних пробелов в скобках
+    Проверка на наличие лишних пробелов в скобках.
 
-        Пример:
-        $hoge = 'hoge';
-        $fuga = ($hoge !== 'fuga' ); // Expected 0 space before close parenthesis; 1 found
+    Пример:
+    # Плохо
+    $hoge = 'hoge';
+    $fuga = ($hoge !== 'fuga' ); // Expected 0 space before close parenthesis; 1 found
+
+    # Хорошо
+    $hoge = 'hoge';
+    $fuga = ($hoge !== 'fuga');
     -->
     <rule ref="Generic.WhiteSpace.ArbitraryParenthesesSpacing"/>
 
     <!--
-        Проверяет что вокруг квадратных скобок нет пробелов
+    Проверяет что вокруг квадратных скобок нет пробелов.
 
-        Пример:
-        $array ['hoge']; // Space found before square bracket; expected "$array[" but found "$array ["
-        $array[ 'huga']; // Space found after square bracket; expected "['huga'" but found "[ 'huga'"
+    Пример:
+    # Плохо
+    $array ['hoge']; // Space found before square bracket; expected "$array[" but found "$array ["
+    $array[ 'huga']; // Space found after square bracket; expected "['huga'" but found "[ 'huga'"
+
+    # Хорошо
+    $array['hoge'];
+    $array['huga'];
     -->
     <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
 
     <!--
-        Проверяет, соответствует ли имя файла имени класса, содержащегося в файле.
-
-        Пример:
-        class Hoge
-        {
-        }
-
-        //название файла NoMatch
-    -->
-    <rule ref="Squiz.Classes.ClassFileName">
-        <exclude-pattern>install/index.php</exclude-pattern>
-    </rule>
-
-    <!--
-    Проверьте правильность выравнивания звездочек в комментариях к документации.
+    Проверяет, соответствует ли имя файла имени класса, содержащегося в файле.
 
     Пример:
-    /**
-     *NoSpaceAfterStar
-       * SpaceBeforeStar
-     */
     class Hoge
     {
     }
-    -->
-    <rule ref="Squiz.Commenting.DocCommentAlignment"/>
 
-    <!--
-    Исключение из-за особенностей некоторых констант в bitrix
+    //название файла NoMatch
     -->
-    <rule ref="Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase">
-        <exclude-pattern>bootstrap.php</exclude-pattern>
-    </rule>
-
-    <!--
-    Исключение из-за особенностей файлов установки модулей и компонентов в bitrix
-    -->
-    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+    <rule ref="Squiz.Classes.ClassFileName">
         <exclude-pattern>install/index.php</exclude-pattern>
         <exclude-pattern>/class.php</exclude-pattern>
         <exclude-pattern>/ajax.php</exclude-pattern>
     </rule>
 
     <!--
-    Исключение из-за особенностей файлов установки модулей в bitrix
+    Проверяет стиль наименования констант.
+
+    Пример:
+    # Плохо
+    // ERROR  Class constants must be uppercase; expected TESTCONSTERROR but found testConstant
+    const testConstError = 'test_error';
+
+    class Hoge
+    {
+        // ERROR  Class constants must be uppercase; expected TESTCONSTERROR but found testConstant
+        public const testConstError = 'test_error';
+    }
+
+    # Хорошо
+    const TEST_CONST_OK = 'test_ok';
+
+    class Hoge
+    {
+        public const TEST_CONST_OK = 'test_ok';
+    }
     -->
-    <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
-        <exclude-pattern type="relative">/install/index.php*</exclude-pattern>
+    <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
+
+    <!--
+    Проверяет наличие namespace в файле.
+
+    Пример:
+    # Плохо
+    // ERROR Each class must be in a namespace of at least one level (a top-level vendor name)
+    class Hoge
+    {
+    }
+
+    # Хорошо
+    namespace INY\Core\DI;
+
+    class Hoge
+    {
+    }
+    -->
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <!-- Исключение из-за особенностей файлов в bitrix -->
+        <exclude-pattern>install/index.php</exclude-pattern>
+        <exclude-pattern>/class.php</exclude-pattern>
+        <exclude-pattern>/ajax.php</exclude-pattern>
     </rule>
 
     <!--
-    Исключение из-за особенностей файлов установки модулей и компонентов в bitrix
+    Проверяет наименование класса в стиле CamelCase.
+
+    Пример:
+    # Плохо
+    class example_class
+    {
+        // код класса
+    }
+
+    # Хорошо
+    class ExampleClass
+    {
+        // код класса
+    }
+    -->
+    <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
+        <!-- Исключение из-за особенностей файлов в bitrix -->
+        <exclude-pattern>install/index.php</exclude-pattern>
+    </rule>
+
+    <!--
+    Используется для обнаружения побочных эффектов (side effects) в файлах,
+    которые обнаружены вместе с символами (например, объявлениями классов, функций и т. д.).
+    Согласно стандарту PSR-1, файлы должны содержать только объявления классов, функций, констант и т. д.,
+    а не код, который вызывает побочные эффекты.
+
+    Пример:
+    # Плохо
+    <?php
+
+    namespace INY\Core\DI;
+
+    echo 'Side effect outside class or function';
+
+    class ExampleClass
+    {
+        // код класса
+    }
+
+    # Хорошо
+    <?php
+
+    namespace INY\Core\DI;
+
+    class ExampleClass
+    {
+        // код класса
+    }
     -->
     <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+        <!-- Исключение из-за особенностей файлов в bitrix -->
         <exclude-pattern>install/index.php</exclude-pattern>
         <exclude-pattern>/class.php</exclude-pattern>
         <exclude-pattern>/ajax.php</exclude-pattern>
@@ -547,6 +670,106 @@
     Проверка длинны строки в 120 символов
     -->
     <rule ref="Generic.Files.LineLength.TooLong">
-        <exclude-pattern>template/module</exclude-pattern>
+        <exclude-pattern>template/module/*</exclude-pattern>
+    </rule>
+
+    <!-- PHPDOC -->
+    <!--
+    Запрещает использование синтаксиса подсказки типа массива (например int[], bool[][])
+    в phpDocs в пользу синтаксиса подсказки общего типа (например, array<int>, array<array<bool>>).
+    -->
+    <rule ref="SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax"/>
+
+    <!--
+    Проверьте правильность выравнивания звездочек в комментариях к документации.
+
+    Пример:
+    # Плохо
+    /**
+     *NoSpaceAfterStar
+       * SpaceBeforeStar
+     */
+    class Hoge
+    {
+    }
+
+    # Хорошо
+    /**
+     * NoSpaceAfterStar
+     * SpaceBeforeStar
+     */
+    class Hoge
+    {
+    }
+    -->
+    <rule ref="Squiz.Commenting.DocCommentAlignment"/>
+
+    <!--
+    Обеспечивает использование сокращенных вариантов скалярных подсказок в phpDocs:
+    int вместо integer и bool вместо boolean. Это сделано для обеспечения совместимости с собственными скалярными
+    подсказками, которые также допускают только сокращенные варианты.
+
+    Пример:
+    # Плохо
+    /**
+     * @param array $s
+     * @param integer $bn // ERROR Expected "int" but found "integer" in @param annotation.
+     *
+     * @return array
+     */
+
+    # Хорошо
+    /**
+     * @param array $s
+     * @param int $bn
+     *
+     * @return array
+     */
+    -->
+    <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
+
+    <!--
+    Документация методов
+    -->
+    <rule ref="Squiz.Commenting.FunctionComment">
+        <properties>
+            <!--Должно пропускать ошибку наследованной документации -->
+            <property name="skipIfInheritdoc" value="true"/>
+
+            <!--Включена проверка только у public и protected методов -->
+            <property name="minimumVisibility" value="protected"/>
+        </properties>
+
+        <!-- Отключена проверка описания метода -->
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
+
+        <!-- Отключена проверка на не понятная что, но она мешает когда в phpdoc все хорошо -->
+        <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamType"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+        <exclude name="Squiz.Commenting.FunctionComment.EmptyThrows"/>
+
+        <!-- Данная настройка заменена на SlevomatCodingStandard.TypeHints.LongTypeHints -->
+        <exclude name="Squiz.Commenting.FunctionComment.IncorrectParamVarName"/>
+
+        <!-- Отключена проверка описания возвращаемых данных -->
+        <exclude name="Squiz.Commenting.FunctionComment.InvalidReturn"/>
+
+        <!-- Исключение проверки наличия документации у методов|функций -->
+        <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+    </rule>
+
+    <!--
+    Убедитесь, что ваши блоки документов соответствуют базовому форматированию.
+
+    Пример:
+    /** */
+
+    /** example
+     */
+    -->
+    <rule ref="Generic.Commenting.DocComment">
+        <exclude name="Generic.Commenting.DocComment.MissingShort"/>
+        <exclude name="Generic.Commenting.DocComment.ShortNotCapital"/>
+        <exclude name="Generic.Commenting.DocComment.TagValueIndent"/>
     </rule>
 </ruleset>
