@@ -12,10 +12,13 @@
   "scripts": {
     "test:all": [
       "@test:phplint",
+      "@test:phpstan",
       "@test:phpcs"
     ],
     "test:phplint": "vendor/bin/phplint --ansi",
-    "test:phpcs": "vendor/bin/phpcs --standard=phpcs.xml --runtime-set testVersion 8.1  ./"
+    "test:phpcs": "vendor/bin/phpcs --standard=phpcs.xml ./",
+    "test:phpstan": "vendor/bin/phpstan analyse --ansi --error-format=\"table\" -c phpstan.neon",
+    "init:phpstan-baseline": "vendor/bin/phpstan analyse -c phpstan.neon --generate-baseline"
   },
   "require": {
     "php": "^8.1",
@@ -23,10 +26,14 @@
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
-    "squizlabs/php_codesniffer": "^3.9.0",
-    "slevomat/coding-standard": "^8.15.0",
-    "phpunit/phpunit": "10.5.13",
-    "overtrue/phplint": "^9.1.2"
+    "squizlabs/php_codesniffer": "3.10.1",
+    "slevomat/coding-standard": "8.15.0",
+    "phpunit/phpunit": "10.5.20",
+    "overtrue/phplint": "9.3.1",
+    "phpstan/phpstan": "1.11.3",
+    "phpstan/phpdoc-parser": "1.29.1",
+    "php-parallel-lint/php-parallel-lint": "v1.4.0",
+    "php-parallel-lint/php-console-highlighter": "v1.0.0"
   },
   "extra": {
     "merge-plugin": {
@@ -44,7 +51,7 @@
   "autoload": {
     "psr-4": {
       "INY\\Core\\": "lib",
-      "INY\\Core\\Test\\PHPUnit\\": "test/PHPUnit"
+      "INY\\Core\\Tests\\PHPUnit\\": "tests/PHPUnit"
     }
   },
   "autoload-dev": {

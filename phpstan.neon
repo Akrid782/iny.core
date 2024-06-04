@@ -1,0 +1,11 @@
+parameters:
+    level: 9
+    paths:
+        - .
+    excludePaths:
+        - */vendor/*
+    bootstrapFiles:
+        - tests/PHPStan/bootstrap.php
+    ignoreErrors:
+        - '#Variable \$[a-zA-Z0-9\\_]+ might not be defined#'
+    editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'
