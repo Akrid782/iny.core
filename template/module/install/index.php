@@ -18,19 +18,16 @@ if (class_exists('TEMPLATE_REPLACE_MODULE_CODE')) {
 class TEMPLATE_REPLACE_MODULE_CODE extends CModule
 {
     public const MIN_VERSION_PHP = 'TEMPLATE_REPLACE_MIN_VERSION_PHP';
-    public $MODULE_ID = 'TEMPLATE_REPLACE_MODULE_ID';
-    public $MODULE_VERSION;
-    public $MODULE_VERSION_DATE;
-    public $MODULE_NAME;
-    public $MODULE_DESCRIPTION;
-    public $PARTNER_URI;
-    public $PARTNER_NAME;
-    public $MODULE_GROUP_RIGHTS = 'N';
-    public string $MODULE_FOLDER;
 
     public function __construct()
     {
-        $moduleVersion = [];
+        $this->MODULE_ID = 'TEMPLATE_REPLACE_MODULE_ID';
+        $this->MODULE_GROUP_RIGHTS = 'N';
+
+        $moduleVersion = [
+            'VERSION' => '0.0.1',
+            'VERSION_DATE' => date('Y-m-d H:i:s'),
+        ];
 
         include_once __DIR__ . '/version.php';
 
@@ -41,8 +38,6 @@ class TEMPLATE_REPLACE_MODULE_CODE extends CModule
         $this->MODULE_DESCRIPTION = Loc::getMessage('TEMPLATE_REPLACE_PREFIX_MODULE_DESCRIPTION');
         $this->PARTNER_NAME = Loc::getMessage('TEMPLATE_REPLACE_PREFIX_PARTNER_NAME');
         $this->PARTNER_URI = Loc::getMessage('TEMPLATE_REPLACE_PREFIX_PARTNER_URI');
-
-        $this->MODULE_FOLDER = dirname(__DIR__);
     }
 
     /**
@@ -70,7 +65,7 @@ class TEMPLATE_REPLACE_MODULE_CODE extends CModule
             case 1:
                 $APPLICATION->includeAdminFile(
                     Loc::getMessage('TEMPLATE_REPLACE_PREFIX_INSTALL_TITLE'),
-                    $this->MODULE_FOLDER . '/install/step1.php'
+                    __DIR__ . '/step1.php'
                 );
 
                 return;
@@ -82,7 +77,7 @@ class TEMPLATE_REPLACE_MODULE_CODE extends CModule
 
                 $APPLICATION->includeAdminFile(
                     Loc::getMessage('TEMPLATE_REPLACE_PREFIX_INSTALL_TITLE'),
-                    $this->MODULE_FOLDER . '/install/step2.php'
+                    __DIR__ . '/step2.php'
                 );
 
                 return;
@@ -149,7 +144,7 @@ class TEMPLATE_REPLACE_MODULE_CODE extends CModule
             case 1:
                 $APPLICATION->includeAdminFile(
                     Loc::getMessage('TEMPLATE_REPLACE_PREFIX_UNINSTALL_TITLE'),
-                    $this->MODULE_FOLDER . '/install/unstep1.php'
+                    __DIR__ . '/unstep1.php'
                 );
 
                 return;
@@ -160,7 +155,7 @@ class TEMPLATE_REPLACE_MODULE_CODE extends CModule
 
                 $APPLICATION->includeAdminFile(
                     Loc::getMessage('TEMPLATE_REPLACE_PREFIX_UNINSTALL_TITLE'),
-                    $this->MODULE_FOLDER . '/install/unstep2.php'
+                    __DIR__ . '/unstep2.php'
                 );
 
                 return;
@@ -203,7 +198,7 @@ class TEMPLATE_REPLACE_MODULE_CODE extends CModule
     }
 
     /**
-     * @return array
+     * @return array<int, array<string, string>>
      */
     private function getEvents(): array
     {
@@ -259,7 +254,7 @@ class TEMPLATE_REPLACE_MODULE_CODE extends CModule
         if ($this->hasError()) {
             $APPLICATION->includeAdminFile(
                 Loc::getMessage('TEMPLATE_REPLACE_PREFIX_MODULE_INSTALL_ERROR'),
-                $this->MODULE_FOLDER . '/install/error.php'
+                __DIR__ . '/error.php'
             );
         }
     }

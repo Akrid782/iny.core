@@ -1,5 +1,6 @@
 {
   "name": "akird782/iny-core",
+  "version": "1.0.0",
   "description": "Базовый модуль для быстрой разработки в bitrix",
   "minimum-stability": "stable",
   "license": "MIT",
@@ -31,9 +32,7 @@
     "phpunit/phpunit": "10.5.20",
     "overtrue/phplint": "9.3.1",
     "phpstan/phpstan": "1.11.3",
-    "phpstan/phpdoc-parser": "1.29.1",
-    "php-parallel-lint/php-parallel-lint": "v1.4.0",
-    "php-parallel-lint/php-console-highlighter": "v1.0.0"
+    "phpstan/phpdoc-parser": "1.29.1"
   },
   "extra": {
     "merge-plugin": {

@@ -1,0 +1,34 @@
+{
+  "name": "bx-create",
+  "version": "1.0.0",
+  "description": "Config for linters",
+  "main": "src/app.js",
+  "scripts": {
+    "format": "npm run check:path && prettier $npm_config_path'/**/*.{js, jsx, ts, html, json, css, scss}' --write ",
+    "lint:css": "npm run check:path && stylelint $npm_config_path'/**/*{css,scss}'",
+    "lint:css:fix": "stylelint $npm_config_path'/**/*{css,scss}' --fix",
+    "lint:js": "npx eslint $npm_config_path'/**/*{js,jsx}'",
+    "lint:js:fix": "npx eslint $npm_config_path'/**/*{js,jsx}' --fix",
+    "lint:all": "npm run check:path && npm run lint:css && npm run lint:js",
+    "lint:all:fix": "npm run check:path && npm run format && npm run lint:css:fix && npm run lint:js:fix",
+    "check:path": "test -n \"$npm_config_path\"  && test \"$npm_config_path\" != \"true\" || npm run exit ",
+    "exit": "echo \"The \"--path\" parameter is not set. Example \"npm run format --path=path to the target directory\"\" && test -n \"\""
+  },
+  "author": "wowankz",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.2.5",
+    "postcss-html": "^1.6.0",
+    "stylelint": "^16.2.1",
+    "stylelint-config-html": "^1.1.0",
+    "stylelint-config-rational-order": "^0.1.2",
+    "stylelint-config-standard": "^36.0.0",
+    "stylelint-config-standard-scss": "^13.0.0",
+    "stylelint-order": "^6.0.4"
+  }
+}

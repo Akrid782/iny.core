@@ -2,6 +2,9 @@
 
 namespace INY\Core\Trait;
 
+use INY\Core\DI\Container;
+use Bitrix\Main\ObjectNotFoundException;
+
 /**
  * Trait Singleton
  *
@@ -9,23 +12,16 @@ namespace INY\Core\Trait;
  */
 trait Singleton
 {
-    protected static ?self $instance = null;
-
-    final private function __construct()
-    {
-        $this->initContext();
-    }
-
     /**
      * @return static
+     * @throws ObjectNotFoundException
      */
     final public static function getInstance(): static
     {
-        if (!static::$instance) {
-            static::$instance = new static();
-        }
-
-        return static::$instance;
+        /**
+         * @var static
+         */
+        return Container::get(static::class);
     }
 
     /**
@@ -33,7 +29,12 @@ trait Singleton
      */
     final public static function hasInstance(): bool
     {
-        return isset(static::$instance);
+        return Container::has(static::class);
+    }
+
+    final private function __construct()
+    {
+        $this->initContext();
     }
 
     /**
@@ -53,7 +54,7 @@ trait Singleton
     /**
      * @return void
      */
-    private function initContext(): void
+    protected function initContext(): void
     {
     }
 }

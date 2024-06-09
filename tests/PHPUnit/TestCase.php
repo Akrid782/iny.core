@@ -1,6 +1,6 @@
 <?php
 
-namespace INY\Core\Test\PHPUnit;
+namespace INY\Core\Tests\PHPUnit;
 
 use ReflectionClass;
 use ReflectionException;
@@ -66,9 +66,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @param object|string $class
-     * @param string $methodName
-     * @param array $args
+     * @param object|string        $class
+     * @param string               $methodName
+     * @param array<string, mixed> $args
      *
      * @return mixed
      * @throws ReflectionException
@@ -77,6 +77,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
     {
         $reflectClass = new ReflectionClass($class::class);
 
-        return $reflectClass->getMethod($methodName)->invokeArgs($class, [...$args]);
+        return $reflectClass->getMethod($methodName)->invokeArgs((object) $class, [...$args]);
     }
 }

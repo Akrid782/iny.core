@@ -15,7 +15,7 @@ final class ModuleDTO
      * @param string $description
      * @param string $partnerName
      * @param string $partnerUri
-     * @param float $minVersionPHP
+     * @param float  $minVersionPHP
      */
     public function __construct(
         public readonly string $id,

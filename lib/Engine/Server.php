@@ -4,6 +4,7 @@ namespace INY\Core\Engine;
 
 use INY\Core\Kernel;
 use Bitrix\Main\Context;
+use Bitrix\Main\ObjectNotFoundException;
 
 /**
  * class Server
@@ -24,6 +25,7 @@ final class Server
 
     /**
      * @return Server|null
+     * @throws ObjectNotFoundException
      */
     public static function getCurrent(): ?Server
     {
@@ -64,7 +66,7 @@ final class Server
     public function getCurrentServerType(): EnumServerType
     {
         return EnumServerType::defineServerType(
-            (string) Context::getCurrent()?->getEnvironment()->get(self::SERVER_TYPE)
+            (string) Context::getCurrent()->getEnvironment()->get(self::SERVER_TYPE)
         );
     }
 }

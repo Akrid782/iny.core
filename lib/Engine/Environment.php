@@ -40,6 +40,9 @@ final class Environment
         return file_exists($this->envFilePath);
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getEnvValues(): array
     {
         return (array) parse_ini_file($this->envFilePath, true, INI_SCANNER_TYPED);

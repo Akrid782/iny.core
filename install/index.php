@@ -7,6 +7,7 @@ use Bitrix\Main\ModuleManager;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Engine\CurrentUser;
 use Bitrix\Main\ArgumentNullException;
+use Bitrix\Main\IO\Directory;
 
 if (class_exists('iny_core')) {
     return;
@@ -18,19 +19,16 @@ if (class_exists('iny_core')) {
 class iny_core extends CModule
 {
     public const MIN_VERSION_PHP = 8.1;
-    public $MODULE_ID = 'iny.core';
-    public $MODULE_VERSION;
-    public $MODULE_VERSION_DATE;
-    public $MODULE_NAME;
-    public $MODULE_DESCRIPTION;
-    public $PARTNER_URI;
-    public $PARTNER_NAME;
-    public $MODULE_GROUP_RIGHTS = 'N';
-    public string $MODULE_FOLDER;
 
     public function __construct()
     {
-        $moduleVersion = [];
+        $this->MODULE_ID = 'iny.core';
+        $this->MODULE_GROUP_RIGHTS = 'N';
+
+        $moduleVersion = [
+            'VERSION' => '0.0.1',
+            'VERSION_DATE' => date('Y-m-d H:i:s'),
+        ];
 
         include_once __DIR__ . '/version.php';
 
@@ -41,8 +39,6 @@ class iny_core extends CModule
         $this->MODULE_DESCRIPTION = Loc::getMessage('INY_CORE_MODULE_DESCRIPTION');
         $this->PARTNER_NAME = Loc::getMessage('INY_CORE_PARTNER_NAME');
         $this->PARTNER_URI = Loc::getMessage('INY_CORE_PARTNER_URI');
-
-        $this->MODULE_FOLDER = dirname(__DIR__);
     }
 
     /**
@@ -70,7 +66,7 @@ class iny_core extends CModule
             case 1:
                 $APPLICATION->includeAdminFile(
                     Loc::getMessage('INY_CORE_INSTALL_TITLE'),
-                    $this->MODULE_FOLDER . '/install/step1.php'
+                    __DIR__ . '/step1.php'
                 );
 
                 return;
@@ -82,7 +78,7 @@ class iny_core extends CModule
 
                 $APPLICATION->includeAdminFile(
                     Loc::getMessage('INY_CORE_INSTALL_TITLE'),
-                    $this->MODULE_FOLDER . '/install/step2.php'
+                    __DIR__ . '/step2.php'
                 );
 
                 return;
@@ -106,6 +102,20 @@ class iny_core extends CModule
      */
     public function InstallFiles(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
+        copyDirFiles(
+            __DIR__ . '/admin',
+            Application::getDocumentRoot() . '/bitrix/admin',
+            true,
+            true
+        );
+        copyDirFiles(
+            __DIR__ . '/js',
+            Application::getDocumentRoot() . '/bitrix/js',
+            true,
+            true,
+            false,
+            'node_modules',
+        );
     }
 
     /**
@@ -149,7 +159,7 @@ class iny_core extends CModule
             case 1:
                 $APPLICATION->includeAdminFile(
                     Loc::getMessage('INY_CORE_UNINSTALL_TITLE'),
-                    $this->MODULE_FOLDER . '/install/unstep1.php'
+                    __DIR__ . '/unstep1.php'
                 );
 
                 return;
@@ -160,7 +170,7 @@ class iny_core extends CModule
 
                 $APPLICATION->includeAdminFile(
                     Loc::getMessage('INY_CORE_UNINSTALL_TITLE'),
-                    $this->MODULE_FOLDER . '/install/unstep2.php'
+                    __DIR__ . '/unstep2.php'
                 );
 
                 return;
@@ -185,6 +195,11 @@ class iny_core extends CModule
      */
     public function UnInstallFiles(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
+        deleteDirFiles(
+            __DIR__ . '/admin',
+            Application::getDocumentRoot() . '/bitrix/admin',
+        );
+        Directory::deleteDirectory(Application::getDocumentRoot() . '/bitrix/js/iny');
     }
 
     /**
@@ -203,7 +218,7 @@ class iny_core extends CModule
     }
 
     /**
-     * @return array
+     * @return array<int, array<string, string>>
      */
     private function getEvents(): array
     {
@@ -259,7 +274,7 @@ class iny_core extends CModule
         if ($this->hasError()) {
             $APPLICATION->includeAdminFile(
                 Loc::getMessage('INY_CORE_MODULE_INSTALL_ERROR'),
-                $this->MODULE_FOLDER . '/install/error.php'
+                __DIR__ . '/error.php'
             );
         }
     }
@@ -271,6 +286,6 @@ class iny_core extends CModule
     {
         global $APPLICATION;
 
-        return (bool) $APPLICATION->getException();
+        return !empty($APPLICATION->getException());
     }
 }

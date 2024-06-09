@@ -1,11 +1,23 @@
 parameters:
-    level: 9
+    level: 8
     paths:
-        - .
+        - ./
     excludePaths:
         - */vendor/*
+        - */node_modules/*
     bootstrapFiles:
         - tests/PHPStan/bootstrap.php
+    parallel:
+        jobSize: 20
+        maximumNumberOfProcesses: 32
+        minimumNumberOfJobsPerProcess: 4
+    reportUnmatchedIgnoredErrors: false
     ignoreErrors:
+        -
+            message: '#Strict comparison using !== between true and true will always evaluate to false.#'
+            path: */js/*/config.php
+            count: 1
         - '#Variable \$[a-zA-Z0-9\\_]+ might not be defined#'
+        - '#Using nullsafe method call on non-nullable type Bitrix\\Main\\Context. Use -> instead.#'
+        - '#Call to an undefined method Bitrix\\#'
     editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'

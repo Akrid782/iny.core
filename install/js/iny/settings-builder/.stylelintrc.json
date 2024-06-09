@@ -1,0 +1,64 @@
+{
+  "root": true,
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-standard-scss",
+    "stylelint-config-html",
+    "stylelint-config-rational-order"
+  ],
+  "plugins": [
+    "stylelint-order",
+    "stylelint-config-rational-order/plugin"
+  ],
+  "rules": {
+    "order/properties-order": [],
+    "plugin/rational-order": [
+      true,
+      {
+        "border-in-box-model": false,
+        "empty-line-between-groups": true
+      }
+    ],
+    "selector-id-pattern": [
+      "^([a-z][a-z0-9]*)(-[a-z0-9]+)*$",
+      {
+        "message": "Expected id selector \"%s\" to be kebab-case"
+      }
+    ],
+    "selector-class-pattern": [
+      "^([a-z][a-z0-9]*)([-|_]{1,2}[a-z0-9]+)*$",
+      {
+        "message": "Expected class selector \"%s\" to be BEM notation"
+      }
+    ],
+    "declaration-empty-line-before": [
+      "never",
+      {
+        "ignore": [
+          "after-declaration"
+        ]
+      }
+    ],
+    "color-hex-length": [
+      "long"
+    ],
+    "color-function-notation": [
+      "modern",
+      {
+        "ignore": [
+          "with-var-inside"
+        ]
+      }
+    ]
+  },
+  "ignoreFiles": [
+    "** /**.bundle.css",
+    "**/**.min.css",
+    "** /**.js",
+    "**/**.ts",
+    "** /**.json",
+    "**/**.map",
+    "** /**.md",
+    "**/dist/**"
+  ]
+}

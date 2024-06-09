@@ -4,9 +4,9 @@
     <arg name="colors"/>
     <arg value="p"/>
     <arg value="s"/>
-    <arg name="report" value="code"/>
     <arg name="extensions" value="php"/>
-    <arg name="ignore" value="*/vendor*/"/>
+    <arg name="report" value="code"/>
+    <arg name="ignore" value="*/vendor*/,*/node_modules*/"/>
 
     <rule ref="PSR12"/>
 

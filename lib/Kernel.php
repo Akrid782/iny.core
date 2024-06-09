@@ -16,9 +16,9 @@ final class Kernel
 {
     use Singleton;
 
-    private readonly Environment $appEnvironment;
+    private Environment $appEnvironment;
 
-    private function initContext(): void
+    protected function initContext(): void
     {
         $pathEnv = Application::getDocumentRoot() . '/.env';
 

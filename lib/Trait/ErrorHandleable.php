@@ -14,28 +14,16 @@ use Bitrix\Main\SystemException;
 trait ErrorHandleable
 {
     /**
-     * @var array<Throwable>
+     * @var List<Throwable>
      */
     private static array $errorList = [];
 
-    private static function addError(string $message, int $code = 500): void
-    {
-        if ($message) {
-            self::$errorList[] = new SystemException($message, $code, self::getClassPath());
-        }
-    }
-
-    private static function getClassPath(): string
-    {
-        return (new ReflectionClass(static::class))->getFileName();
-    }
-
     /**
-     * @return Throwable
+     * @return Throwable|null
      */
-    public static function getLastError(): Throwable
+    public static function getLastError(): ?Throwable
     {
-        return end(self::$errorList);
+        return end(self::$errorList) ?: null;
     }
 
     /**
@@ -60,5 +48,22 @@ trait ErrorHandleable
     public static function hasNotError(): bool
     {
         return empty(self::$errorList);
+    }
+
+    private static function createError(string $message, int $code = 500): void
+    {
+        if ($message) {
+            self::$errorList[] = new SystemException($message, $code, self::getClassPath());
+        }
+    }
+
+    private static function getClassPath(): string
+    {
+        return (string) (new ReflectionClass(static::class))->getFileName();
+    }
+
+    private static function addException(Throwable $throwable): void
+    {
+        self::$errorList[] = $throwable;
     }
 }

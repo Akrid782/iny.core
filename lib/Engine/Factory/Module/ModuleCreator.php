@@ -2,9 +2,8 @@
 
 namespace INY\Core\Engine\Factory\Module;
 
-use CModule;
-use iny_core;
 use SplFileInfo;
+use IteratorAggregate;
 use Bitrix\Main\Application;
 use Bitrix\Main\IO\Directory;
 use RecursiveIteratorIterator;
@@ -34,24 +33,9 @@ final class ModuleCreator
     public function __construct(ModuleDTO $module)
     {
         $this->module = $module;
-        $this->templateModuleFolderPath = $this->getTemplateModuleFolderPath();
+        $this->templateModuleFolderPath = dirname(__DIR__, 4) . self::TEMPLATE_PATH;
         $this->createdModulePath = $this->getCreatedModulePath();
         $this->coreBitrixModulePath = $this->getCoreBitrixModulePath();
-    }
-
-    private function getTemplateModuleFolderPath(): string
-    {
-        return $this->getModuleFolder() . self::TEMPLATE_PATH;
-    }
-
-    private function getModuleFolder(): string
-    {
-        /**
-         * @var $baseModule iny_core
-         */
-        $baseModule = CModule::createModuleObject('iny.core');
-
-        return $baseModule->MODULE_FOLDER;
     }
 
     private function getCreatedModulePath(): string
@@ -70,8 +54,8 @@ final class ModuleCreator
     public function create(): bool
     {
         if ($this->isModuleExists()) {
-            self::addError(
-                Loc::getMessage('INY_CORE_ENGINE_MODULE_FACTORY_MODULE_CREATOR_EXISTS_ERROR', [
+            self::createError(
+                (string) Loc::getMessage('INY_CORE_ENGINE_MODULE_FACTORY_MODULE_CREATOR_EXISTS_ERROR', [
                     '#MODULE_ID#' => $this->module->id,
                 ])
             );
@@ -104,7 +88,7 @@ final class ModuleCreator
         $iteratorForCreatedModule = $this->getRecursiveIteratorForCreatedModule();
 
         /**
-         * @var $moduleFile SplFileInfo
+         * @var IteratorAggregate<SplFileInfo> $iteratorForCreatedModule
          */
         foreach ($iteratorForCreatedModule as $moduleFile) {
             $this->replaceTemplatesInFile($moduleFile, $templateKeys);
@@ -126,8 +110,8 @@ final class ModuleCreator
     {
         $hasCreated = copyDirFiles($this->templateModuleFolderPath, $this->createdModulePath, true, true);
         if (!$hasCreated) {
-            self::addError(
-                Loc::getMessage('INY_CORE_ENGINE_MODULE_FACTORY_MODULE_CREATOR_COPY_MODULE_ERROR', [
+            self::createError(
+                (string) Loc::getMessage('INY_CORE_ENGINE_MODULE_FACTORY_MODULE_CREATOR_COPY_MODULE_ERROR', [
                     '#PATH#' => $this->createdModulePath,
                 ])
             );
@@ -136,6 +120,9 @@ final class ModuleCreator
         return self::hasNotError();
     }
 
+    /**
+     * @return array<string, string|float>
+     */
     private function getTemplateKeys(): array
     {
         $code = str_replace('.', '_', $this->module->id);
@@ -153,6 +140,9 @@ final class ModuleCreator
         ];
     }
 
+    /**
+     * @phpstan-return RecursiveIteratorIterator<RecursiveDirectoryIterator>
+     */
     private function getRecursiveIteratorForCreatedModule(): RecursiveIteratorIterator
     {
         return new RecursiveIteratorIterator(
@@ -160,13 +150,19 @@ final class ModuleCreator
         );
     }
 
+    /**
+     * @param SplFileInfo                 $moduleFile
+     * @param array<string, string|float> $templateKeys
+     *
+     * @return bool
+     */
     private function replaceTemplatesInFile(SplFileInfo $moduleFile, array $templateKeys): bool
     {
         if (!$moduleFile->isFile()) {
             return false;
         }
 
-        $contentFile = file_get_contents($moduleFile->getRealPath());
+        $contentFile = (string) file_get_contents($moduleFile->getRealPath());
         $contentFile = str_replace(array_keys($templateKeys), $templateKeys, $contentFile);
 
         return $this->rewriteFile($moduleFile, $contentFile);
@@ -176,8 +172,8 @@ final class ModuleCreator
     {
         $isRewriteFile = rewriteFile($moduleFile->getRealPath(), $contentFile);
         if (!$isRewriteFile) {
-            self::addError(
-                Loc::getMessage('INY_CORE_ENGINE_MODULE_FACTORY_MODULE_CREATOR_FILE_REWRITE_ERROR', [
+            self::createError(
+                (string) Loc::getMessage('INY_CORE_ENGINE_MODULE_FACTORY_MODULE_CREATOR_FILE_REWRITE_ERROR', [
                     '#PATH#' => $this->createdModulePath,
                 ])
             );
