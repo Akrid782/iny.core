@@ -1,17 +1,25 @@
 <?xml version="1.0"?>
-<ruleset name="INY">
-    <description>PHP_CodeSniffer INY configuration</description>
+<ruleset name="PHP_CodeSniffer">
+    <description>PHP_CodeSniffer configuration</description>
     <arg name="colors"/>
     <arg value="p"/>
     <arg value="s"/>
     <arg name="extensions" value="php"/>
     <arg name="report" value="code"/>
-    <arg name="ignore" value="*/vendor*/,*/node_modules*/"/>
+    <arg name="ignore" value="*/vendor*/,*/node_modules*/,*/local/php_interface/migrations*/"/>
 
     <rule ref="PSR12"/>
 
-    <config name="testVersion" value="8.1"/>
     <config name="installed_paths" value="vendor/slevomat/coding-standard"/>
+
+    <!--
+    Обеспечивает максимальную когнитивную сложность функций. По умолчанию максимальная когнитивная сложность 5.
+    -->
+    <rule ref="SlevomatCodingStandard.Complexity.Cognitive">
+        <properties>
+            <property name="maxComplexity" value="6"/>
+        </properties>
+    </rule>
 
     <!--
     Обнаруживает бесполезные тернарные операторы.
@@ -666,6 +674,11 @@
         <exclude-pattern>/ajax.php</exclude-pattern>
     </rule>
 
+    <rule ref="Generic.WhiteSpace.ScopeIndent.Incorrect">
+        <!-- Исключение из-за особенностей файлов в bitrix -->
+        <exclude-pattern>*/template.php</exclude-pattern>
+    </rule>
+
     <!--
     Проверка длинны строки в 120 символов
     -->
@@ -755,7 +768,7 @@
         <exclude name="Squiz.Commenting.FunctionComment.InvalidReturn"/>
 
         <!-- Исключение проверки наличия документации у методов|функций -->
-        <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+        <exclude name="Squiz.Commenting.FunctionComment.Missing.*"/>
     </rule>
 
     <!--

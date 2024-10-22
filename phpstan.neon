@@ -1,12 +1,24 @@
 parameters:
     level: 8
+    customRulesetUsed: true
+    tmpDir: ./../../../upload/
+    resultCachePath: %tmpDir%/resultCache.php
+    fileExtensions:
+        - php
+        - module
+        - inc
     paths:
+        - ./../../../local/
         - ./
     excludePaths:
-        - */vendor/*
-        - */node_modules/*
+        analyse:
+            - ./../../../bitrix/
+        analyseAndScan:
+            - */vendor/*
+            - */node_modules/*
+            - */migrations/*
     bootstrapFiles:
-        - tests/PHPStan/bootstrap.php
+        - ./tests/PHPStan/bootstrap.php
     parallel:
         jobSize: 20
         maximumNumberOfProcesses: 32
@@ -20,4 +32,5 @@ parameters:
         - '#Variable \$[a-zA-Z0-9\\_]+ might not be defined#'
         - '#Using nullsafe method call on non-nullable type Bitrix\\Main\\Context. Use -> instead.#'
         - '#Call to an undefined method Bitrix\\#'
+        - '#Call to method .* on an unknown class .*\\EO_[A-Za-z0-9_]+.#'
     editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'
