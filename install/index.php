@@ -1,13 +1,13 @@
 <?php
 
 use Bitrix\Main\Application;
-use Bitrix\Main\EventManager;
-use Bitrix\Main\Config\Option;
-use Bitrix\Main\ModuleManager;
-use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\Engine\CurrentUser;
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ArgumentNullException;
-use Bitrix\Main\IO\Directory;
+use Bitrix\Main\Config\Option;
+use Bitrix\Main\Engine\CurrentUser;
+use Bitrix\Main\EventManager;
+use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\ModuleManager;
 
 if (class_exists('iny_core')) {
     return;
@@ -102,20 +102,6 @@ class iny_core extends CModule
      */
     public function InstallFiles(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        copyDirFiles(
-            __DIR__ . '/admin',
-            Application::getDocumentRoot() . '/bitrix/admin',
-            true,
-            true
-        );
-        copyDirFiles(
-            __DIR__ . '/js',
-            Application::getDocumentRoot() . '/bitrix/js',
-            true,
-            true,
-            false,
-            'node_modules',
-        );
     }
 
     /**
@@ -132,6 +118,7 @@ class iny_core extends CModule
     /**
      * @return void
      * @throws ArgumentNullException
+     * @throws ArgumentException
      */
     public function DoUnInstall(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -149,6 +136,7 @@ class iny_core extends CModule
     /**
      * @return void
      * @throws ArgumentNullException
+     * @throws ArgumentException
      */
     private function unInstall(): void
     {
@@ -195,16 +183,11 @@ class iny_core extends CModule
      */
     public function UnInstallFiles(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        deleteDirFiles(
-            __DIR__ . '/admin',
-            Application::getDocumentRoot() . '/bitrix/admin',
-        );
-        Directory::deleteDirectory(Application::getDocumentRoot() . '/bitrix/js/iny');
     }
 
     /**
      * @return void
-     * @throws ArgumentNullException
+     * @throws ArgumentException
      */
     public function UnInstallDB(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
