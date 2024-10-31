@@ -13,6 +13,7 @@ https://github.com/Akrid782/iny.core/actions/workflows/test.yml)
 ## Функционал
 
 1. [Документация по разворачиванию линтеров кода](./docs/lint/README.md)
+2. [Документация по консольным командам bitrix](./docs/cmd/README.md)
 
 ## Требования
 

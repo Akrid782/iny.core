@@ -4,6 +4,7 @@ namespace INY\Core\Service;
 
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectNotFoundException;
+use Bitrix\Main\SystemException;
 use INY\Core\UseCase\CreateModule\CreateModuleCommand;
 use INY\Core\UseCase\CreateModule\CreateModuleHandler;
 use Psr\Container\NotFoundExceptionInterface;
@@ -34,8 +35,9 @@ class ModuleService
      *
      * @return void
      * @throws ArgumentException
-     * @throws ObjectNotFoundException
      * @throws NotFoundExceptionInterface
+     * @throws ObjectNotFoundException
+     * @throws SystemException
      */
     public function create(array $moduleParam): void
     {

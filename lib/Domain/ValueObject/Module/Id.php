@@ -38,9 +38,7 @@ class Id
     private function validateFormat(): void
     {
         if (!ModuleManager::isValidModule($this->value)) {
-            throw new ArgumentException(
-                'ID модуля может содержать только строчные буквы, цифры и подчеркивания'
-            );
+            throw new ArgumentException('Не корректный идентификатор модуля');
         }
     }
 }

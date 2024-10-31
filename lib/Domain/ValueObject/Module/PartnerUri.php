@@ -25,7 +25,7 @@ class PartnerUri
      */
     private function validateFormat(): void
     {
-        if (!filter_var($this->value, FILTER_VALIDATE_URL)) {
+        if ($this->value && !filter_var($this->value, FILTER_VALIDATE_URL)) {
             throw new ArgumentException('URI партнера должно быть в формате scheme://domain');
         }
     }

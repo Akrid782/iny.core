@@ -1,7 +1,14 @@
 <?php
 
+use INY\Core\Cli\Command\Make\ModuleCommand;
+
 return [
-    'scope' => [
-        'value' => [],
+    'console' => [
+        'value' => [
+            'commands' => [
+                ModuleCommand::class,
+            ],
+        ],
+        'readonly' => true,
     ],
 ];

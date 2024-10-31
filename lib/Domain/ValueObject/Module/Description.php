@@ -25,8 +25,8 @@ class Description
      */
     private function validateLength(): void
     {
-        if (mb_strlen($this->value) > 255) {
-            throw new ArgumentException('Описание модуля не может быть длиннее 255 символов');
+        if (mb_strlen($this->value) <= 0 || mb_strlen($this->value) > 255) {
+            throw new ArgumentException('Описание модуля не может быть пустым или длиннее 255 символов');
         }
     }
 }
