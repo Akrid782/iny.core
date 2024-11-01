@@ -32,7 +32,7 @@ class ModuleFactory
         string $description,
         string $partnerName,
         string $partnerUri,
-        string $phpVersion,
+        float $phpVersion,
         string $dir,
     ): Module {
         return new Module(
