@@ -1,6 +1,5 @@
 {
   "name": "akird782/iny-core",
-  "version": "1.0.0",
   "description": "Базовый модуль для быстрой разработки в bitrix",
   "minimum-stability": "stable",
   "license": "MIT",
