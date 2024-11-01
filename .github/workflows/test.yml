@@ -28,11 +28,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-php-
 
-      - name: Unset parameter for action github
-        run: composer config extra.merge-plugin --unset
-          && composer config autoload-dev --unset
-          && cat composer.json
-
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
