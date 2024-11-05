@@ -44,20 +44,20 @@ class ModuleCommand extends Command
             'bitrix',
         ]);
 
-        $moduleService = ServiceLocator::getInstance()->get('iny.service.module.create');
-        $moduleService->create([
-            'id' => $moduleId,
-            'name' => (string) $this->askQuestion($input, $output, 'Имя модуля:'),
-            'description' => (string) $this->askQuestion($input, $output, 'Описание модуля:'),
-            'phpVersion' => (float) $this->askChoiceQuestion($input, $output, 'Версия php (по умолчанию 8.1):', [
-                8.1,
-                8.2,
-                8.3,
-            ]),
-            'partnerName' => (string) $this->askQuestion($input, $output, 'Имя партнера:'),
-            'partnerUri' => (string) $this->askQuestion($input, $output, 'URI партнера:'),
-            'dir' => $dir,
-        ]);
+        ServiceLocator::getInstance()->get('iny.service.module.create')
+            ->create([
+                'id' => $moduleId,
+                'name' => (string) $this->askQuestion($input, $output, 'Имя модуля:'),
+                'description' => (string) $this->askQuestion($input, $output, 'Описание модуля:'),
+                'phpVersion' => (float) $this->askChoiceQuestion($input, $output, 'Версия php (по умолчанию 8.1):', [
+                    8.1,
+                    8.2,
+                    8.3,
+                ]),
+                'partnerName' => (string) $this->askQuestion($input, $output, 'Имя партнера:'),
+                'partnerUri' => (string) $this->askQuestion($input, $output, 'URI партнера:'),
+                'dir' => $dir,
+            ]);
 
         $output->writeln([
             '<info>',
