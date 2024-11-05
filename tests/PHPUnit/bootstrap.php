@@ -1,27 +1,16 @@
 <?php
 
-// phpcs:disable Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase
-const NO_KEEP_STATISTIC = true;
-const NOT_CHECK_PERMISSIONS = true;
-const BX_NO_ACCELERATOR_RESET = true;
-const BX_CRONTAB = true;
-const STOP_STATISTICS = true;
-const NO_AGENT_STATISTIC = 'Y';
-const DisableEventsCheck = true;
-const NO_AGENT_CHECK = true;
-// phpcs:enable Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase
-
 // phpcs:disable SlevomatCodingStandard.Variables.DisallowSuperGlobalVariable.DisallowedSuperGlobalVariable
 if (empty($_SERVER['DOCUMENT_ROOT'])) {
     $_SERVER['DOCUMENT_ROOT'] = dirname(__DIR__, 5);
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/cli/bitrix.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/cli/bootstrap.php';
 
 // phpcs:enable SlevomatCodingStandard.Variables.DisallowSuperGlobalVariable.DisallowedSuperGlobalVariable
 
-use Bitrix\Main\Loader;
 use Bitrix\Main\Application;
+use Bitrix\Main\Loader;
 
 Loader::includeModule('iny.core');
 

@@ -4,11 +4,9 @@ namespace INY\Core\Cli\Command\Make;
 
 use Bitrix\Main\Application;
 use Bitrix\Main\ArgumentException;
+use Bitrix\Main\DI\ServiceLocator;
 use Bitrix\Main\ObjectNotFoundException;
 use Bitrix\Main\SystemException;
-use INY\Core\Infrastructure\Repository\ModuleRepository;
-use INY\Core\Service\ModuleService;
-use INY\Core\UseCase\CreateModule\CreateModuleHandler;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -46,8 +44,7 @@ class ModuleCommand extends Command
             'bitrix',
         ]);
 
-        $repository = new ModuleRepository();
-        $moduleService = new ModuleService(new CreateModuleHandler($repository));
+        $moduleService = ServiceLocator::getInstance()->get('iny.service.module.create');
         $moduleService->create([
             'id' => $moduleId,
             'name' => (string) $this->askQuestion($input, $output, 'Имя модуля:'),

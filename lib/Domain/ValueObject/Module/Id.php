@@ -37,7 +37,7 @@ class Id
      */
     private function validateFormat(): void
     {
-        if (!ModuleManager::isValidModule($this->value)) {
+        if (strlen($this->value) < 2 || !ModuleManager::isValidModule($this->value)) {
             throw new ArgumentException('Не корректный идентификатор модуля');
         }
     }

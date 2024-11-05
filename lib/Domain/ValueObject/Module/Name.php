@@ -36,8 +36,8 @@ class Name
      */
     private function validateLength(): void
     {
-        if (mb_strlen($this->value) > 50) {
-            throw new ArgumentException('Имя модуля не может быть длиннее 50 символов');
+        if (mb_strlen($this->value) < 2 || mb_strlen($this->value) > 50) {
+            throw new ArgumentException('Имя модуля не может быть меньше 2 < или > 50 символов');
         }
     }
 }
