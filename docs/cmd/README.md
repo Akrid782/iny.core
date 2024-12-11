@@ -26,3 +26,13 @@ make init
 ```bash
 make create-module
 ```
+
+## Примеры
+
+### Успешное создание модуля
+
+![Screenshot](example_module_create_success.png)
+
+### Ошибка создания модуля
+
+![Screenshot](example_module_create_error.png)
