@@ -2,38 +2,33 @@
 
 namespace INY\Core\Domain\Factory;
 
-use Bitrix\Main\ArgumentException;
 use INY\Core\Domain\Entity\Module;
+use INY\Core\Domain\Exception\ModuleValidationException;
 use INY\Core\Domain\ValueObject\Module\Description;
-use INY\Core\Domain\ValueObject\Module\Dir;
 use INY\Core\Domain\ValueObject\Module\Id;
 use INY\Core\Domain\ValueObject\Module\Name;
 use INY\Core\Domain\ValueObject\Module\PartnerName;
 use INY\Core\Domain\ValueObject\Module\PartnerUri;
 use INY\Core\Domain\ValueObject\Module\PhpVersion;
-use INY\Core\Trait\SingletonTrait;
 
 /**
  * class ModuleFactory
  *
- * @author  Иванов Николай <n.ivanov@mcart.ru>
+ * @author  Иванов Николай <akrid782@mail.ru>
  * @package INY\Core\Domain\Repository
  */
 class ModuleFactory
 {
-    use SingletonTrait;
-
     /**
-     * @throws ArgumentException
+     * @throws ModuleValidationException
      */
-    public function create(
+    public static function create(
         string $id,
         string $name,
         string $description,
         string $partnerName,
         string $partnerUri,
         float $phpVersion,
-        string $dir,
     ): Module {
         return new Module(
             new Id($id),
@@ -41,8 +36,7 @@ class ModuleFactory
             new Description($description),
             new PartnerName($partnerName),
             new PartnerUri($partnerUri),
-            new PhpVersion($phpVersion),
-            new Dir($dir),
+            new PhpVersion($phpVersion)
         );
     }
 }

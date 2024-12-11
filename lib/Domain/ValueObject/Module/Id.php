@@ -2,19 +2,21 @@
 
 namespace INY\Core\Domain\ValueObject\Module;
 
-use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ModuleManager;
+use INY\Core\Domain\Exception\Module\ModuleIdEmptyException;
+use INY\Core\Domain\Exception\Module\ModuleIdInvalidFormatException;
 
 /**
  * class Id
  *
- * @author  Иванов Николай <n.ivanov@mcart.ru>
+ * @author  Иванов Николай <akrid782@mail.ru>
  * @package INY\Core\Domain\ValueObject\Module
  */
 class Id
 {
     /**
-     * @throws ArgumentException
+     * @throws ModuleIdEmptyException
+     * @throws ModuleIdInvalidFormatException
      */
     public function __construct(public readonly string $value)
     {
@@ -23,22 +25,22 @@ class Id
     }
 
     /**
-     * @throws ArgumentException
+     * @throws ModuleIdEmptyException
      */
     private function validateNotEmpty(): void
     {
         if (empty($this->value)) {
-            throw new ArgumentException('ID модуля не может быть пустым');
+            throw new ModuleIdEmptyException();
         }
     }
 
     /**
-     * @throws ArgumentException
+     * @throws ModuleIdInvalidFormatException
      */
     private function validateFormat(): void
     {
         if (strlen($this->value) < 2 || !ModuleManager::isValidModule($this->value)) {
-            throw new ArgumentException('Не корректный идентификатор модуля');
+            throw new ModuleIdInvalidFormatException($this->value);
         }
     }
 }

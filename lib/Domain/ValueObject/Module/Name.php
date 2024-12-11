@@ -2,18 +2,23 @@
 
 namespace INY\Core\Domain\ValueObject\Module;
 
-use Bitrix\Main\ArgumentException;
+use INY\Core\Domain\Exception\Module\ModuleNameEmptyException;
+use INY\Core\Domain\Exception\Module\ModuleNameInvalidLengthException;
 
 /**
  * class Name
  *
- * @author  Иванов Николай <n.ivanov@mcart.ru>
+ * @author  Иванов Николай <akrid782@mail.ru>
  * @package INY\Core\Domain\ValueObject\Module
  */
 class Name
 {
+    private const MIN_LENGTH_NAME = 2;
+    private const MAX_LENGTH_NAME = 50;
+
     /**
-     * @throws ArgumentException
+     * @throws ModuleNameEmptyException
+     * @throws ModuleNameInvalidLengthException
      */
     public function __construct(public readonly string $value)
     {
@@ -22,22 +27,22 @@ class Name
     }
 
     /**
-     * @throws ArgumentException
+     * @throws ModuleNameEmptyException
      */
     private function validateNotEmpty(): void
     {
         if (empty($this->value)) {
-            throw new ArgumentException('Имя модуля не может быть пустым');
+            throw new ModuleNameEmptyException();
         }
     }
 
     /**
-     * @throws ArgumentException
+     * @throws ModuleNameInvalidLengthException
      */
     private function validateLength(): void
     {
-        if (mb_strlen($this->value) < 2 || mb_strlen($this->value) > 50) {
-            throw new ArgumentException('Имя модуля не может быть меньше 2 < или > 50 символов');
+        if (mb_strlen($this->value) < self::MIN_LENGTH_NAME || mb_strlen($this->value) > self::MAX_LENGTH_NAME) {
+            throw new ModuleNameInvalidLengthException($this->value, self::MIN_LENGTH_NAME, self::MAX_LENGTH_NAME);
         }
     }
 }

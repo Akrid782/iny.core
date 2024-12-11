@@ -9,7 +9,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * trait ContainerTrait
  *
- * @author  Иванов Николай <n.ivanov@mcart.ru>
+ * @author  Иванов Николай <akrid782@mail.ru>
  * @package INY\Core\Trait
  */
 trait ContainerTrait

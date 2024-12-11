@@ -3,7 +3,6 @@
 namespace INY\Core\Domain\Entity;
 
 use INY\Core\Domain\ValueObject\Module\Description;
-use INY\Core\Domain\ValueObject\Module\Dir;
 use INY\Core\Domain\ValueObject\Module\Id;
 use INY\Core\Domain\ValueObject\Module\Name;
 use INY\Core\Domain\ValueObject\Module\PartnerName;
@@ -13,7 +12,7 @@ use INY\Core\Domain\ValueObject\Module\PhpVersion;
 /**
  * class Module
  *
- * @author  Иванов Николай <n.ivanov@mcart.ru>
+ * @author  Иванов Николай <akrid782@mail.ru>
  * @package INY\Core\Domain\Entity
  */
 class Module
@@ -24,8 +23,7 @@ class Module
         private readonly Description $description,
         private readonly PartnerName $partnerName,
         private readonly PartnerUri $partnerUri,
-        private readonly PhpVersion $phpVersion,
-        private readonly Dir $dir
+        private readonly PhpVersion $phpVersion
     ) {
     }
 
@@ -57,10 +55,5 @@ class Module
     public function getPhpVersion(): PhpVersion
     {
         return $this->phpVersion;
-    }
-
-    public function getDir(): Dir
-    {
-        return $this->dir;
     }
 }

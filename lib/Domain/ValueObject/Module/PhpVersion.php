@@ -2,18 +2,18 @@
 
 namespace INY\Core\Domain\ValueObject\Module;
 
-use Bitrix\Main\ArgumentException;
+use INY\Core\Domain\Exception\Module\ModulePhpVersionInvalidException;
 
 /**
  * class PhpVersion
  *
- * @author  Иванов Николай <n.ivanov@mcart.ru>
+ * @author  Иванов Николай <akrid782@mail.ru>
  * @package INY\Core\Domain\ValueObject\Module
  */
 class PhpVersion
 {
     /**
-     * @throws ArgumentException
+     * @throws ModulePhpVersionInvalidException
      */
     public function __construct(public readonly float $value)
     {
@@ -21,12 +21,12 @@ class PhpVersion
     }
 
     /**
-     * @throws ArgumentException
+     * @throws ModulePhpVersionInvalidException
      */
     private function validatePhpVersion(): void
     {
         if ($this->value > PHP_VERSION) {
-            throw new ArgumentException('Поддерживаемая версия php не может быть больше ' . PHP_VERSION);
+            throw new ModulePhpVersionInvalidException($this->value);
         }
     }
 }

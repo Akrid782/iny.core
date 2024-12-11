@@ -7,7 +7,9 @@ use Bitrix\Main\ArgumentException;
 use Bitrix\Main\DI\ServiceLocator;
 use Bitrix\Main\ObjectNotFoundException;
 use Bitrix\Main\SystemException;
+use INY\Core\Domain\Exception\ModuleValidationException;
 use Psr\Container\NotFoundExceptionInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,18 +20,12 @@ use Symfony\Component\Console\Question\Question;
 /**
  * class ModuleCommand
  *
- * @author  Иванов Николай <n.ivanov@mcart.ru>
+ * @author  Иванов Николай <akrid782@mail.ru>
  * @package INY\Core\Cli\Command
  */
+#[AsCommand(name: 'make:module', description: 'Создание модуля по шаблону.')]
 class ModuleCommand extends Command
 {
-    protected function configure(): void
-    {
-        $this
-            ->setName('make:module')
-            ->setDescription('Создание модуля по шаблону.');
-    }
-
     /**
      * @throws NotFoundExceptionInterface
      * @throws ArgumentException
@@ -38,38 +34,53 @@ class ModuleCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $moduleId = (string) $this->askQuestion($input, $output, 'Идентификатор модуля:');
-        $dir = (string) $this->askChoiceQuestion($input, $output, 'Путь создания модуля (по умолчанию local):', [
-            'local',
-            'bitrix',
-        ]);
+        $status = Command::SUCCESS;
 
-        ServiceLocator::getInstance()->get('iny.service.module.create')
-            ->create([
+        $phpVersion = PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
+        $phpVersion = (float) $this->askChoiceQuestion($input, $output, "Версия php (по умолчанию $phpVersion):", [
+            7.4,
+            8.1,
+            8.2,
+            8.3,
+        ], $phpVersion);
+        $moduleId = (string) $this->askQuestion($input, $output, 'Идентификатор модуля:');
+        $moduleName = (string) $this->askQuestion($input, $output, 'Имя модуля:');
+        $moduleDescription = (string) $this->askQuestion($input, $output, 'Описание модуля:');
+        $partnerName = (string) $this->askQuestion($input, $output, 'Имя партнера:');
+        $partnerUri = (string) $this->askQuestion($input, $output, 'URI партнера:');
+
+        try {
+            ServiceLocator::getInstance()->get('iny.service.module.create')->create([
                 'id' => $moduleId,
-                'name' => (string) $this->askQuestion($input, $output, 'Имя модуля:'),
-                'description' => (string) $this->askQuestion($input, $output, 'Описание модуля:'),
-                'phpVersion' => (float) $this->askChoiceQuestion($input, $output, 'Версия php (по умолчанию 8.1):', [
-                    8.1,
-                    8.2,
-                    8.3,
-                ]),
-                'partnerName' => (string) $this->askQuestion($input, $output, 'Имя партнера:'),
-                'partnerUri' => (string) $this->askQuestion($input, $output, 'URI партнера:'),
-                'dir' => $dir,
+                'name' => $moduleName,
+                'description' => $moduleDescription,
+                'phpVersion' => $phpVersion,
+                'partnerName' => $partnerName,
+                'partnerUri' => $partnerUri,
             ]);
 
-        $output->writeln([
-            '<info>',
-            'SUCCESS',
-            '==================================',
-            'Модуль "' . $moduleId . '" создан.',
-            'Путь до модуля ' . Application::getDocumentRoot() . '/' . $dir . '/' . $moduleId . '/',
-            '==================================',
-            '</info>',
-        ]);
+            $output->writeln([
+                '<info>',
+                'SUCCESS',
+                '==================================',
+                'Модуль "' . $moduleId . '" создан.',
+                'Путь до модуля ' . Application::getDocumentRoot() . '/local/' . $moduleId . '/',
+                '==================================',
+                '</info>',
+            ]);
+        } catch (ModuleValidationException $exception) {
+            $output->writeln([
+                '<error>ERROR</error>',
+                '<fg=#c0392b>==================================',
+                'Сообщение об ошибке: ' . $exception->getMessage(),
+                'Введенное значение: ' . $exception->getInvalidValue(),
+                '==================================</>',
+            ]);
 
-        return Command::SUCCESS;
+            $status = Command::FAILURE;
+        }
+
+        return $status;
     }
 
     /**
@@ -84,10 +95,7 @@ class ModuleCommand extends Command
         OutputInterface $output,
         string $question
     ): mixed {
-        $questionHelper = new QuestionHelper();
-        $question = new Question($question);
-
-        return $questionHelper->ask($input, $output, $question);
+        return (new QuestionHelper())->ask($input, $output, new Question($question));
     }
 
     /**
@@ -95,6 +103,7 @@ class ModuleCommand extends Command
      * @param OutputInterface $output
      * @param non-empty-string $question
      * @param list<mixed> $choiceQuestionList
+     * @param bool|float|int|string|null $defaultValue
      *
      * @return mixed
      */
@@ -102,11 +111,13 @@ class ModuleCommand extends Command
         InputInterface $input,
         OutputInterface $output,
         string $question,
-        array $choiceQuestionList
+        array $choiceQuestionList,
+        bool|float|int|null|string $defaultValue = 0
     ): mixed {
-        $questionHelper = new QuestionHelper();
-        $question = new ChoiceQuestion($question, $choiceQuestionList, 0);
-
-        return $questionHelper->ask($input, $output, $question);
+        return (new QuestionHelper())->ask(
+            $input,
+            $output,
+            new ChoiceQuestion($question, $choiceQuestionList, $defaultValue)
+        );
     }
 }

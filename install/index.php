@@ -135,7 +135,6 @@ class iny_core extends CModule
 
     /**
      * @return void
-     * @throws ArgumentNullException
      * @throws ArgumentException
      */
     private function unInstall(): void

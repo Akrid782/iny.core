@@ -5,7 +5,7 @@ namespace INY\Core\UseCase\CreateModule;
 /**
  * class CreateModuleCommand
  *
- * @author  Иванов Николай <n.ivanov@mcart.ru>
+ * @author  Иванов Николай <akrid782@mail.ru>
  * @package INY\Core\UseCase\CreateModule
  */
 class CreateModuleCommand
@@ -17,7 +17,6 @@ class CreateModuleCommand
         private readonly float $phpVersion = 8.1,
         private readonly string $partnerName = '',
         private readonly string $partnerUri = '',
-        private readonly string $dir = ''
     ) {
     }
 
@@ -49,10 +48,5 @@ class CreateModuleCommand
     public function getPartnerUri(): string
     {
         return $this->partnerUri;
-    }
-
-    public function getDir(): string
-    {
-        return $this->dir;
     }
 }

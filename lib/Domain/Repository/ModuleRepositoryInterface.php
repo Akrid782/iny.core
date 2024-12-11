@@ -8,7 +8,7 @@ use INY\Core\Domain\ValueObject\Module\Id;
 /**
  * interface ModuleRepositoryInterface
  *
- * @author  Иванов Николай <n.ivanov@mcart.ru>
+ * @author  Иванов Николай <akrid782@mail.ru>
  * @package INY\Core\Domain\Repository
  */
 interface ModuleRepositoryInterface

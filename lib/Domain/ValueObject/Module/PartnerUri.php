@@ -2,18 +2,18 @@
 
 namespace INY\Core\Domain\ValueObject\Module;
 
-use Bitrix\Main\ArgumentException;
+use INY\Core\Domain\Exception\Module\ModulePartnerUriInvalidFormatException;
 
 /**
  * class PartnerUri
  *
- * @author  Иванов Николай <n.ivanov@mcart.ru>
+ * @author  Иванов Николай <akrid782@mail.ru>
  * @package INY\Core\Domain\ValueObject\Module
  */
 class PartnerUri
 {
     /**
-     * @throws ArgumentException
+     * @throws ModulePartnerUriInvalidFormatException
      */
     public function __construct(public readonly string $value)
     {
@@ -21,12 +21,12 @@ class PartnerUri
     }
 
     /**
-     * @throws ArgumentException
+     * @throws ModulePartnerUriInvalidFormatException
      */
     private function validateFormat(): void
     {
         if ($this->value && !filter_var($this->value, FILTER_VALIDATE_URL)) {
-            throw new ArgumentException('URI партнера должно быть в формате scheme://domain');
+            throw new ModulePartnerUriInvalidFormatException($this->value);
         }
     }
 }

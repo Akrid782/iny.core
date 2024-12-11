@@ -1,12 +1,13 @@
 <?php
 
 use Bitrix\Main\Application;
-use Bitrix\Main\EventManager;
-use Bitrix\Main\Config\Option;
-use Bitrix\Main\ModuleManager;
-use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\Engine\CurrentUser;
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ArgumentNullException;
+use Bitrix\Main\Config\Option;
+use Bitrix\Main\Engine\CurrentUser;
+use Bitrix\Main\EventManager;
+use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\ModuleManager;
 
 if (class_exists('TEMPLATE_REPLACE_MODULE_CODE')) {
     return;
@@ -184,7 +185,7 @@ class TEMPLATE_REPLACE_MODULE_CODE extends CModule
 
     /**
      * @return void
-     * @throws ArgumentNullException
+     * @throws ArgumentException
      */
     public function UnInstallDB(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {

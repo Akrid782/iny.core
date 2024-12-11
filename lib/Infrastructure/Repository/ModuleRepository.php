@@ -17,7 +17,7 @@ use SplFileInfo;
 /**
  * class ModuleRepository
  *
- * @author  Иванов Николай <n.ivanov@mcart.ru>
+ * @author  Иванов Николай <akrid782@mail.ru>
  * @package INY\Core\Infrastructure\Repository
  */
 class ModuleRepository implements ModuleRepositoryInterface
@@ -36,7 +36,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function create(Module $module): bool
     {
         $rootPath = Application::getDocumentRoot();
-        $createdModulePath = $rootPath . '/' . $module->getDir()->value . '/modules/' . $module->getId()->value . '/';
+        $createdModulePath = $rootPath . '/local/modules/' . $module->getId()->value . '/';
         $directory = Directory::createDirectory($createdModulePath);
         if (!$directory->isExists()) {
             return false;

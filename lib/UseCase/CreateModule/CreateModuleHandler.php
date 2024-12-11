@@ -2,18 +2,16 @@
 
 namespace INY\Core\UseCase\CreateModule;
 
-use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\ObjectNotFoundException;
 use Bitrix\Main\SystemException;
+use INY\Core\Domain\Exception\ModuleValidationException;
 use INY\Core\Domain\Factory\ModuleFactory;
 use INY\Core\Domain\Repository\ModuleRepositoryInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * class CreateModuleHandler
  *
- * @author  Иванов Николай <n.ivanov@mcart.ru>
+ * @author  Иванов Николай <akrid782@mail.ru>
  * @package INY\Core\UseCase\CreateModule
  */
 class CreateModuleHandler
@@ -23,21 +21,18 @@ class CreateModuleHandler
     }
 
     /**
-     * @throws ArgumentException
-     * @throws ObjectNotFoundException
-     * @throws NotFoundExceptionInterface
      * @throws SystemException
+     * @throws ModuleValidationException
      */
     public function handle(CreateModuleCommand $createModuleCommand): void
     {
-        $module = ModuleFactory::getInstance()->create(
+        $module = ModuleFactory::create(
             $createModuleCommand->getId(),
             $createModuleCommand->getName(),
             $createModuleCommand->getDescription(),
             $createModuleCommand->getPartnerName(),
             $createModuleCommand->getPartnerUri(),
             $createModuleCommand->getPhpVersion(),
-            $createModuleCommand->getDir(),
         );
         if ($this->moduleRepository->isExists($module->getId())) {
             throw new SystemException(
